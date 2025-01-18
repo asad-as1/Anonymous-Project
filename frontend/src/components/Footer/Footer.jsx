@@ -10,15 +10,15 @@ const Footer = () => {
       <div className="footer-content">
         <div className="footer-section">
           <h3>About Us</h3>
-          <p>We help you manage your contacts efficiently and stay connected with the people who matter most.</p>
+          <p>This website is for people who love to study. It will help you improve yourself, grow, and develop your skills.</p>
         </div>
 
         <div className="footer-section">
           <h3>Quick Links</h3>
           <ul>
             <li><Link to="/">Home</Link></li>
-            <li><Link to="/contacts">Contacts</Link></li>
-            <li><Link to="/newcontact">Add Contact</Link></li>
+            <li><Link to="/">??</Link></li>
+            <li><Link to="/">??</Link></li>
             <li><Link to="/">Privacy Policy</Link></li>
           </ul>
         </div>
@@ -45,7 +45,7 @@ const Footer = () => {
       </div>
 
       <div className="footer-bottom">
-        <p>&copy; {currentYear} Contacts App. All rights reserved.</p>
+        <p>&copy; {currentYear} EduAccess. All rights reserved.</p>
       </div>
     </footer>
   );

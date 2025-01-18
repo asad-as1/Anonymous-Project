@@ -3,6 +3,7 @@ import { Book, Calendar, Share2, FileText } from 'lucide-react';
 import './Home.css';
 import img1 from "../../img/img1.jpg"
 import img2 from "../../img/img2.jpg"
+import {Link} from "react-router-dom"
 
 const Home = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -58,7 +59,8 @@ const Home = () => {
           <p className="hero-subtitle">
             Experience education reimagined through innovative technology and accessibility
           </p>
-          <button className="cta-button">Get Started</button>
+          {/* <button className="cta-button"> */}
+            <Link className='cta-button' to="/register">Get Started</Link>
         </div>
       </section>
 
@@ -138,7 +140,9 @@ const Home = () => {
               Watch how our platform transforms the way you learn, collaborate, and grow.
               Experience seamless accessibility features and intuitive interface.
             </p>
-            <button className="demo-button">Try Demo</button>
+            <div className="db">
+                <Link to="/register" className="demo-button">Sign Up Now</Link>
+            </div>
           </div>
           <div className="demo-preview">
             <div className="preview-window">

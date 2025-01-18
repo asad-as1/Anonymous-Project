@@ -1,17 +1,11 @@
 /* Base Styles */
-:root {
-    --primary-color: #6366f1;
-    --secondary-color: #8b5cf6;
-    --accent-color: #ec4899;
-    --background-dark: #0f172a;
-    --text-light: #f8fafc;
-    --text-dark: #1e293b;
-  }
+
 
   .image-section {
     margin-top: 50px;
     padding: 0 20px; /* Add padding to prevent touching the screen edges */
 }
+
 
 .two-divs-container {
     display: flex;
@@ -171,6 +165,9 @@
     font-weight: 600;
     cursor: pointer;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-decoration: none;
+    
+    animation: pulse 2s ease-in-out infinite;
   }
   
   .cta-button:hover {
@@ -285,7 +282,7 @@
   }
   
   .demo-button {
-    background: linear-gradient(to right, var(--secondary-color), var(--accent-color));
+    background: linear-gradient(to right,var(--accent-color), var(--secondary-color) );
     color: white;
     padding: 0.8rem 2rem;
     border: none;
@@ -293,6 +290,14 @@
     font-weight: 600;
     cursor: pointer;
     transition: transform 0.2s ease;
+    text-decoration: none;
+    /* display: flex; */
+  }
+
+  .db {
+    display: flex;
+    justify-content: center;
+
   }
   
   .demo-button:hover {
@@ -331,9 +336,11 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 80%;
-    height: 80%;
-    background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+    width: 90%;
+    height: 90%;
+    /* background: linear-gradient(45deg, var(--primary-color), var(--accent-color)); */
+    background-image: url(https://img.freepik.com/premium-photo/cool-lofi-girl-studying-her-desk-rainy-cloudy-outside-beautiful-chill-atmospheric-wallpaper-4k-streaming-background-lofi-hiphop-style-anime-manga-style-generative-ai_117038-5586.jpg);
+    background-size: cover;
     border-radius: 10px;
     animation: pulse 2s ease-in-out infinite;
   }

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Book, Calendar, Share2, FileText } from 'lucide-react';
 import './Home.css';
 import img1 from "../../img/img1.jpg"
-import img2 from "../../img/img1.jpg"
+import img2 from "../../img/img2.jpg"
 
 const Home = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -100,10 +100,16 @@ const Home = () => {
               <img src= {img1} alt="Document Reader" className="image-left" />
             </div>
             <div className="right">
-              <h3>Smart Document Reader</h3>
+              <h3>Smart Document Reader: Hear What You Can’t See</h3>
               <p>
-                Upload documents and let our system read it aloud for visually impaired users, powered by OCR technology.
+              Upload any document, and let our intelligent text-to-speech system read it aloud for you. Powered by advanced OCR (Optical Character Recognition) technology, this feature is designed to make reading accessible to everyone. From books to manuals, no content is out of reach.
               </p>
+              {/* <h3>Empowering Lives Through Technology</h3> */}
+              <p>
+              For individuals who face challenges in vision or communication, technology can be a powerful ally. Our platform bridges the gap by providing accessible tools that cater to these needs, ensuring everyone can connect, learn, and thrive.
+              </p>
+              {/* <h3>Seamless Accessibility, Anytime</h3> */}
+              <p>The platform adapts to your unique requirements, ensuring that every interaction is smooth and intuitive. Whether it's magnifying text or voice-controlled navigation, accessibility is at the heart of our design.</p>
             </div>
           </div>
 
@@ -112,9 +118,11 @@ const Home = () => {
               <img src={img2} alt="Study Materials" className="image-left" />
             </div>
             <div className="right">
-              <h3>Study Materials Hub</h3>
+              <h3>Importance of Knowledge</h3>
               <p>
-                Access a repository of comprehensive study materials, organized for easy navigation and learning.
+              Studying is essential for personal growth, intellectual development, and achieving life goals. It enables individuals to acquire knowledge, sharpen skills, and build a deeper understanding of the world around them. Beyond academic success, studying fosters critical thinking, problem-solving, and decision-making abilities, which are vital in everyday life. It encourages curiosity and opens doors to new opportunities, empowering individuals to overcome challenges and adapt to change.
+              </p>
+              <p>For people with visual or communication difficulties, access to study materials and learning tools can be transformative. Education provides a sense of independence, boosts self-confidence, and enhances the ability to engage meaningfully with society. It serves as a foundation for career advancement, social inclusion, and personal fulfillment. By making studying accessible to everyone, we ensure that no one is left behind, creating a more equitable and inclusive world where everyone has the chance to reach their potential.
               </p>
             </div>
           </div>

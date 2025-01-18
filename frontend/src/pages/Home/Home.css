@@ -7,6 +7,77 @@
     --text-light: #f8fafc;
     --text-dark: #1e293b;
   }
+
+  .image-section {
+    margin-top: 50px;
+    padding: 0 20px; /* Add padding to prevent touching the screen edges */
+}
+
+.two-divs-container {
+    display: flex;
+    flex-direction: column;
+    gap: 40px; /* Space between the two blocks */
+    padding: 0 20px; /* Additional padding for the container */
+}
+
+.two-divs {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px; /* Add gap between image and text */
+    flex: 1 1 50%; /* Ensures equal width for both sections */
+}
+
+.two-divs.reverse {
+    flex-direction: row-reverse; /* This reverses the order of the image and text */
+}
+
+.left, .right {
+    flex: 1;
+    padding: 10px; /* Space inside the containers */
+    max-width: 50%; /* Ensures equal width for image and text */
+    box-sizing: border-box; /* Include padding in the width calculation */
+}
+
+.image-left {
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.1);
+}
+
+.right h3 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.right p {
+    font-size: 16px;
+    line-height: 1.6;
+    padding: 20px;
+}
+
+/* Ensure spacing on smaller screens */
+@media (max-width: 768px) {
+    .two-divs {
+        flex-direction: column;
+        gap: 20px; /* Space between image and text for stacked layout */
+    }
+
+    .two-divs.reverse {
+        flex-direction: column; /* Reset reverse for smaller screens */
+    }
+
+    .left, .right {
+        max-width: 100%; /* Full width on smaller screens */
+        padding: 0; /* Remove extra padding on smaller screens */
+    }
+
+    .image-section {
+        padding: 0 10px; /* Adjust padding for smaller screens */
+    }
+}
+
   
   .home-container {
     min-height: 100vh;
@@ -360,5 +431,35 @@
   
     .feature-card {
       padding: 1.5rem;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .two-divs {
+      flex-direction: column;
+      gap: 20px;
+    }
+  
+    .two-divs.reverse {
+      flex-direction: column;
+    }
+  
+    .left, .right {
+      max-width: 100%;
+      padding: 0;
+    }
+  
+    .hero-title {
+      font-size: 2.5rem;
+    }
+  
+    .demo-text {
+      padding-right: 0;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .hero-title {
+      font-size: 2rem;
     }
   }

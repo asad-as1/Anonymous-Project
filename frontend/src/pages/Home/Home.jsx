@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Book, Calendar, Share2, FileText } from 'lucide-react';
 import './Home.css';
-import img-1 from "../img/img-1.jpg"
+import img1 from "../../img/img1.jpg"
+import img2 from "../../img/img1.jpg"
 
 const Home = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -96,7 +97,7 @@ const Home = () => {
         <div className="two-divs-container">
           <div className="two-divs">
             <div className="left">
-              <img src="image1.jpg" alt="Document Reader" className="image-left" />
+              <img src= {img1} alt="Document Reader" className="image-left" />
             </div>
             <div className="right">
               <h3>Smart Document Reader</h3>
@@ -108,7 +109,7 @@ const Home = () => {
 
           <div className="two-divs reverse">
             <div className="left">
-              <img src="image2.jpg" alt="Study Materials" className="image-left" />
+              <img src={img2} alt="Study Materials" className="image-left" />
             </div>
             <div className="right">
               <h3>Study Materials Hub</h3>

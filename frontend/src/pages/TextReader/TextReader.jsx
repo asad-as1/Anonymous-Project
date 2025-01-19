@@ -1,36 +1,59 @@
 import React, { useState, useEffect, useRef } from "react";
-import "./TextReader.css"
+import { Upload, Play, Pause, StopCircle, Volume2, RefreshCw } from "lucide-react";
+import "./TextReader.css";
 
-function TextReader() {
+const TextReader = () => {
   const [file, setFile] = useState(null);
   const [text, setText] = useState("");
   const [error, setError] = useState("");
   const [currentTime, setCurrentTime] = useState(0);
   const [audioUrl, setAudioUrl] = useState(null);
   const [isUsingFallback, setIsUsingFallback] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [show, setShow] = useState(false);
+  const [duration, setDuration] = useState(0);
+  const [activeTab, setActiveTab] = useState("upload");
+  const [playbackRate, setPlaybackRate] = useState(1);
   const audioRef = useRef(null);
   const speechRef = useRef(null);
 
   useEffect(() => {
     if (audioUrl && audioRef.current) {
+      audioRef.current.addEventListener('loadedmetadata', () => {
+        setDuration(audioRef.current.duration);
+      });
       audioRef.current.ontimeupdate = () => {
         setCurrentTime(audioRef.current.currentTime);
       };
     }
+    return () => {
+      if (audioUrl && audioRef.current) {
+        audioRef.current.ontimeupdate = null;
+      }
+    };
   }, [audioUrl]);
 
   const handleFileChange = (event) => {
-    setFile(event.target.files[0]);
+    const selectedFile = event.target.files[0];
+    if (selectedFile) {
+      setPlaybackRate(1)
+      setDuration(0)
+      setShow(false)
+      setIsUsingFallback(false)
+      setAudioUrl(null)
+      setCurrentTime(0)
+      setIsPlaying(false)
+      
+      
+      setFile(selectedFile);
+      setActiveTab("text");
+      handleFileUpload(selectedFile);
+    }
   };
 
-  const handleFileUpload = () => {
-    if (!file) {
-      setError("Please select a file to upload.");
-      return;
-    }
-
+  const handleFileUpload = (selectedFile) => {
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append("file", selectedFile);
 
     fetch(`${import.meta.env.VITE_URL}/textreader`, {
       method: 'POST',
@@ -43,85 +66,101 @@ function TextReader() {
       })
       .catch(error => {
         console.error("Error uploading file:", error);
-        setError("Error uploading file.");
+        setError("Error processing file. Please try again.");
       });
+  };
+
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = Math.floor(seconds % 60);
+    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+  };
+
+  const handleGenerateAudio = async () => {
+    if (!text) {
+      setError("Please upload a file with text content first.");
+      return;
+    }
+
+    try {
+      const response = await fetch(`${import.meta.env.VITE_URL}/generate-audio`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text })
+      });
+      
+      if (!response.ok) throw new Error('Audio generation failed');
+      
+      const audioBlob = await response.blob();
+      const audioUrl = URL.createObjectURL(audioBlob);
+      setAudioUrl(audioUrl);
+      setIsUsingFallback(false);
+      setActiveTab("audio");
+      setShow(true)
+      if (audioRef.current) {
+        audioRef.current.play();
+        setIsPlaying(true);
+      }
+    } catch (error) {
+      console.error("Error generating audio:", error);
+      setError("File is too large!!! Click on Audio tab for audio.");
+      useFallbackTTS();
+    }
   };
 
   const useFallbackTTS = () => {
     setIsUsingFallback(true);
     if ('speechSynthesis' in window) {
       const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = playbackRate;
       speechRef.current = utterance;
       window.speechSynthesis.speak(utterance);
+      setIsPlaying(true);
     } else {
       setError("Text-to-speech is not supported in your browser.");
     }
   };
+  
 
-  const handleGenerateAudio = () => {
-    if (!text) {
-      setError("No text to convert to audio.");
-      return;
-    }
-
-    fetch(`${import.meta.env.VITE_URL}/generate-audio`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ text })
-    })
-      .then(response => response.blob())
-      .then(audioBlob => {
-        const audioUrl = URL.createObjectURL(audioBlob);
-        setAudioUrl(audioUrl);
-        setIsUsingFallback(false);
-        if (audioRef.current) {
-          audioRef.current.play();
-        }
-      })
-      .catch(error => {
-        console.error("Error generating audio:", error);
-        setError("Using browser's text-to-speech as fallback.");
-        useFallbackTTS();
-      });
-  };
-
-  const handlePlayAudio = () => {
+  const handlePlayPause = () => {
     if (isUsingFallback) {
-      window.speechSynthesis.resume();
-    } else if (audioUrl && audioRef.current) {
-      audioRef.current.play();
+      if (isPlaying) {
+        window.speechSynthesis.pause();
+      } else {
+        window.speechSynthesis.resume();
+      }
+    } else if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.pause();
+      } else {
+        audioRef.current.play();
+      }
     }
-  };
-
-  const handlePauseAudio = () => {
-    if (isUsingFallback) {
-      window.speechSynthesis.pause();
-    } else if (audioUrl && audioRef.current) {
-      audioRef.current.pause();
-    }
+    setIsPlaying(!isPlaying);
   };
 
   const handleStop = () => {
     if (isUsingFallback) {
       window.speechSynthesis.cancel();
-    } else if (audioUrl && audioRef.current) {
+    } else if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current.currentTime = 0;
     }
+    setIsPlaying(false);
+    setCurrentTime(0);
   };
 
   const handleSliderChange = (event) => {
-    const newTime = event.target.value;
+    const newTime = parseFloat(event.target.value);
     setCurrentTime(newTime);
     if (audioRef.current) {
       audioRef.current.currentTime = newTime;
     }
   };
 
-  const handleRateChange = (event) => {
+  const handleSpeedChange = (event) => {
     const newRate = parseFloat(event.target.value);
+    setPlaybackRate(newRate);
     if (isUsingFallback && speechRef.current) {
       speechRef.current.rate = newRate;
     } else if (audioRef.current) {
@@ -130,98 +169,149 @@ function TextReader() {
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto p-6">
-      <div className="space-y-6">
-        <h1 className="text-2xl font-bold">File Upload and Audio Player</h1>
-
-        <div className="space-y-4">
-          <input
-            type="file"
-            accept=".pdf,.txt,.jpg,.jpeg,.png"
-            onChange={handleFileChange}
-            className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-          />
-          <button 
-            onClick={handleFileUpload}
-            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-          >
-            Upload File
-          </button>
+    <div className="text-reader-container">
+      <div className="reader-header">
+        <div className="header-title">
+          <Volume2 />
+          Text to Speech Reader
         </div>
+        <div className="header-description">
+          Upload a document and convert it to speech
+        </div>
+      </div>
 
-        {error && <p className="text-red-500">{error}</p>}
+      <div className="reader-content">
+        <div className="tabs-container">
+          <div className="tabs-list">
+            <button 
+              className="tab-trigger"
+              data-state={activeTab === "upload" ? "active" : ""}
+              onClick={() => setActiveTab("upload")}
+            >
+              Upload
+            </button>
+            <button 
+              className="tab-trigger"
+              data-state={activeTab === "text" ? "active" : ""}
+              onClick={() => setActiveTab("text")}
+            >
+              Text
+            </button>
+            <button 
+              className="tab-trigger"
+              data-state={activeTab === "audio" ? "active" : ""}
+              onClick={() => setActiveTab("audio")}
+            >
+              Audio
+            </button>
+          </div>
 
-        {text && (
-          <div className="space-y-4">
-            <h2 className="text-xl font-semibold">Extracted Text</h2>
-            <pre className="p-4 bg-gray-50 rounded overflow-auto max-h-60">{text}</pre>
+          <div className="tab-content">
+            {activeTab === "upload" && (
+              <div className="upload-zone">
+                <input
+                  type="file"
+                  accept=".pdf,.txt,.jpg,.jpeg,.png"
+                  onChange={handleFileChange}
+                  className="upload-input"
+                />
+                <Upload className="upload-icon" />
+                <p className="upload-text">Drop your file here or click to browse</p>
+                <p className="upload-subtext">Supports PDF, TXT, and images</p>
+              </div>
+            )}
 
-            <div className="space-y-4">
-              <div className="flex space-x-2">
-                <button
-                  onClick={handleGenerateAudio}
-                  className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
-                >
-                  Generate & Play Audio
-                </button>
-                {(audioUrl || isUsingFallback) && (
+            {activeTab === "text" && (
+              <div className="text-display">
+                {text ? (
                   <>
-                    <button
-                      onClick={handlePlayAudio}
-                      className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                    <pre className="text-content">{text}</pre>
+                    <button 
+                      className="convert-button"
+                      onClick={handleGenerateAudio}
                     >
-                      Play
-                    </button>
-                    <button
-                      onClick={handlePauseAudio}
-                      className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700"
-                    >
-                      Pause
-                    </button>
-                    <button
-                      onClick={handleStop}
-                      className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
-                    >
-                      Stop
+                      Convert to Speech
                     </button>
                   </>
+                ) : (
+                  <div className="empty-state">
+                    Upload a file to see extracted text
+                  </div>
                 )}
               </div>
+            )}
 
-              {!isUsingFallback && audioUrl && (
-                <div className="space-y-2">
-                  <input
-                    type="range"
-                    min="0"
-                    max={audioRef.current?.duration || 100}
-                    value={currentTime}
-                    onChange={handleSliderChange}
-                    className="w-full"
-                  />
-                  <audio ref={audioRef} src={audioUrl} />
-                </div>
-              )}
+            {activeTab === "audio"  && (
+              <div className="audio-controls">
+                {audioUrl || isUsingFallback ? (
+                  <>
+                  { show &&
+                    <div className="time-slider">
+                      <div className="time-display">
+                        <span>{formatTime(currentTime)}</span>
+                        <span>{formatTime(duration)}</span>
+                      </div>
+                      <input
+                        type="range"
+                        className="slider"
+                        value={currentTime}
+                        max={duration || 100}
+                        step={0.1}
+                        onChange={handleSliderChange}
+                      />
+                    </div>
+                  }   
 
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700">
-                  Speed: {audioRef.current?.playbackRate || speechRef.current?.rate || 1}x
-                </label>
-                <input
-                  type="range"
-                  min="0.5"
-                  max="2"
-                  step="0.1"
-                  value={audioRef.current?.playbackRate || speechRef.current?.rate || 1}
-                  onChange={handleRateChange}
-                  className="w-full"
-                />
+                    <div className="playback-controls">
+                      <button className="control-button" onClick={handleStop}>
+                        <StopCircle />
+                      </button>
+                      <button 
+                        className="control-button primary"
+                        onClick={handlePlayPause}
+                      >
+                        {isPlaying ? <Pause /> : <Play />}
+                      </button>
+                    </div>
+                  { show &&
+                    <div className="speed-control">
+                      <div className="speed-label">
+                        <RefreshCw />
+                        <span>Playback Speed: {playbackRate}x</span>
+                      </div>
+                      <input
+                        type="range"
+                        className="slider"
+                        min="0.5"
+                        max="2"
+                        step="0.1"
+                        value={playbackRate}
+                        onChange={handleSpeedChange}
+                      />
+                    </div>
+}
+                    {!isUsingFallback && (
+                      <audio ref={audioRef} src={audioUrl} />
+                    )}
+                  </>
+                ) : (
+                  <div className="empty-state">
+                    Convert text to audio to start listening
+                  </div>
+                )}
               </div>
-            </div>
+            )}
+          </div>
+        </div>
+
+        {error && (
+          <div className="error-alert">
+            {error}
           </div>
         )}
       </div>
     </div>
   );
-}
+};
 
 export default TextReader;

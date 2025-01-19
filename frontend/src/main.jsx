@@ -4,6 +4,7 @@ import { RouterProvider, createBrowserRouter, Navigate } from 'react-router-dom'
 import Home from './Pages/Home/Home.jsx';
 import './index.css';
 import App from './App.jsx';
+import TextReader from "./pages/TextReader/TextReader.jsx"
 
 const router = createBrowserRouter([
   {
@@ -13,6 +14,10 @@ const router = createBrowserRouter([
       {
         path: '/',
         element: <Home />,
+      },
+      {
+        path: '/textreader',
+        element: <TextReader />,
       },
     ],
   },

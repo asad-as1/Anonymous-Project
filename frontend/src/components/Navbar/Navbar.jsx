@@ -28,7 +28,7 @@ const Navbar = () => {
     <nav className="navbar">
       <Link to="/" className="logo">EduAccess</Link>
       <div ref={menuRef} className={`nav-links ${menuOpen ? 'active' : ''}`}>
-        <Link to="/features">Features</Link>
+        <Link to="/textreader">Text Reader</Link>
         <Link to="/about">About</Link>
         <Link to="/contact">Contact</Link>
         <Link to="/login">Login</Link>

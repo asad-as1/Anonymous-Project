@@ -197,8 +197,10 @@
     margin: 0 auto;
     overflow: hidden;
     position: relative;
+    padding: 20px;
+    border-radius: 10px;
     box-shadow: 
-    10px 10px 15px rgba(22, 19, 19, 0.7),  /* Shadow to the right and bottom */
+    10px 10px 15px rgba(22, 19, 19, 0),  /* Shadow to the right and bottom */
     -10px -10px 15px rgba(43, 243, 183, 0.7);
   }
   
@@ -210,7 +212,7 @@
   .feature-card {
     min-width: 100%;
     padding: 2rem;
-    background: rgba(255, 255, 255, 0.05);
+    /* background: rgba(255, 255, 255, 0.05); */
     border-radius: 20px;
     backdrop-filter: blur(10px);
     text-align: center;

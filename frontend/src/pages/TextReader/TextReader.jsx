@@ -11,6 +11,7 @@ const TextReader = () => {
   const [isUsingFallback, setIsUsingFallback] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [show, setShow] = useState(false);
+  const [converting, setConverting] = useState(false);
   const [duration, setDuration] = useState(0);
   const [activeTab, setActiveTab] = useState("upload");
   const [playbackRate, setPlaybackRate] = useState(1);
@@ -83,6 +84,7 @@ const TextReader = () => {
     }
 
     try {
+      setConverting(true)
       const response = await fetch(`${import.meta.env.VITE_URL}/generate-audio`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -96,6 +98,7 @@ const TextReader = () => {
       setAudioUrl(audioUrl);
       setIsUsingFallback(false);
       setActiveTab("audio");
+      setConverting(false)
       setShow(true)
       if (audioRef.current) {
         audioRef.current.play();
@@ -170,6 +173,22 @@ const TextReader = () => {
 
   return (
     <div className="text-reader-container">
+      {/* Guidelines Section */}
+      <div className="guidelines">
+        <h2 className="guidelines-title">Important Guidelines</h2>
+        <ul className="guidelines-list">
+          <li>Handwritten PDFs or handwritten notes are not allowed.</li>
+          <li>PDFs containing images are not allowed.</li>
+          <li>
+            Maximum PDF size: <b>5MB</b>.
+          </li>
+          <li>
+            If you have images in a non-handwritten PDF, you can upload
+            screenshots of those images, which are acceptable.
+          </li>
+        </ul>
+      </div>
+  
       <div className="reader-header">
         <div className="header-title">
           <Volume2 />
@@ -179,25 +198,25 @@ const TextReader = () => {
           Upload a document and convert it to speech
         </div>
       </div>
-
+  
       <div className="reader-content">
         <div className="tabs-container">
           <div className="tabs-list">
-            <button 
+            <button
               className="tab-trigger"
               data-state={activeTab === "upload" ? "active" : ""}
               onClick={() => setActiveTab("upload")}
             >
               Upload
             </button>
-            <button 
+            <button
               className="tab-trigger"
               data-state={activeTab === "text" ? "active" : ""}
               onClick={() => setActiveTab("text")}
             >
               Text
             </button>
-            <button 
+            <button
               className="tab-trigger"
               data-state={activeTab === "audio" ? "active" : ""}
               onClick={() => setActiveTab("audio")}
@@ -205,7 +224,7 @@ const TextReader = () => {
               Audio
             </button>
           </div>
-
+  
           <div className="tab-content">
             {activeTab === "upload" && (
               <div className="upload-zone">
@@ -216,23 +235,27 @@ const TextReader = () => {
                   className="upload-input"
                 />
                 <Upload className="upload-icon" />
-                <p className="upload-text">Drop your file here or click to browse</p>
+                <p className="upload-text">
+                  Drop your file here or click to browse
+                </p>
                 <p className="upload-subtext">Supports PDF, TXT, and images</p>
               </div>
             )}
-
+  
             {activeTab === "text" && (
               <div className="text-display">
                 {text ? (
                   <>
                     <pre className="text-content">{text}</pre>
-                    <button 
+                    <button
                       className="convert-button"
                       onClick={handleGenerateAudio}
                     >
-                      Convert to Speech
+                      {converting ? "Converting..." : "Convert to Speech"}
                     </button>
                   </>
+                ) : file ? (
+                  <div className="loading-state">Converting file to text...</div>
                 ) : (
                   <div className="empty-state">
                     Upload a file to see extracted text
@@ -240,78 +263,73 @@ const TextReader = () => {
                 )}
               </div>
             )}
-
-            {activeTab === "audio"  && (
+  
+            {activeTab === "audio" && (
               <div className="audio-controls">
                 {audioUrl || isUsingFallback ? (
                   <>
-                  { show &&
-                    <div className="time-slider">
-                      <div className="time-display">
-                        <span>{formatTime(currentTime)}</span>
-                        <span>{formatTime(duration)}</span>
+                    {show && (
+                      <div className="time-slider">
+                        <div className="time-display">
+                          <span>{formatTime(currentTime)}</span>
+                          <span>{formatTime(duration)}</span>
+                        </div>
+                        <input
+                          type="range"
+                          className="slider"
+                          value={currentTime}
+                          max={duration || 100}
+                          step={0.1}
+                          onChange={handleSliderChange}
+                        />
                       </div>
-                      <input
-                        type="range"
-                        className="slider"
-                        value={currentTime}
-                        max={duration || 100}
-                        step={0.1}
-                        onChange={handleSliderChange}
-                      />
-                    </div>
-                  }   
-
+                    )}
+  
                     <div className="playback-controls">
                       <button className="control-button" onClick={handleStop}>
                         <StopCircle />
                       </button>
-                      <button 
+                      <button
                         className="control-button primary"
                         onClick={handlePlayPause}
                       >
                         {isPlaying ? <Pause /> : <Play />}
                       </button>
                     </div>
-                  { show &&
-                    <div className="speed-control">
-                      <div className="speed-label">
-                        <RefreshCw />
-                        <span>Playback Speed: {playbackRate}x</span>
+                    {show && (
+                      <div className="speed-control">
+                        <div className="speed-label">
+                          <RefreshCw />
+                          <span>Playback Speed: {playbackRate}x</span>
+                        </div>
+                        <input
+                          type="range"
+                          className="slider"
+                          min="0.5"
+                          max="2"
+                          step="0.1"
+                          value={playbackRate}
+                          onChange={handleSpeedChange}
+                        />
                       </div>
-                      <input
-                        type="range"
-                        className="slider"
-                        min="0.5"
-                        max="2"
-                        step="0.1"
-                        value={playbackRate}
-                        onChange={handleSpeedChange}
-                      />
-                    </div>
-}
+                    )}
                     {!isUsingFallback && (
                       <audio ref={audioRef} src={audioUrl} />
                     )}
                   </>
                 ) : (
-                  <div className="empty-state">
-                    Convert text to audio to start listening
-                  </div>
+                  <div className="loading-state">Converting text to audio...</div>
                 )}
               </div>
             )}
           </div>
         </div>
-
-        {error && (
-          <div className="error-alert">
-            {error}
-          </div>
-        )}
+  
+        {error && <div className="error-alert">{error}</div>}
       </div>
     </div>
   );
+  
 };
 
 export default TextReader;

@@ -7,6 +7,7 @@ import App from './App.jsx';
 import TextReader from "./pages/TextReader/TextReader.jsx"
 import QnA from "./pages/Q&A/Q&A.jsx"
 import StudyNotes from "./pages/StudyNotes/StudyNotes.jsx"
+import TakeATest from "./pages/Take A Test/TakeATest.jsx"
 
 const router = createBrowserRouter([
   {
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
       {
         path: '/studynotes',
         element: <StudyNotes />,
+      },
+      {
+        path: '/takeatest',
+        element: <TakeATest />,
       },
       
     ],

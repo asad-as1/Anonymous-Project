@@ -32,6 +32,7 @@ const Navbar = () => {
         <Link to="/textreader">Text Reader</Link>
         <Link to="/queandans">Q&A</Link>
         <Link to="/studynotes">Study Notes</Link>
+        <Link to="/takeatest">Take A Test</Link>
         <Link to="/login">Login</Link>
       </div>
       <div className="hamburger" onClick={toggleMenu}>

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import "./StudyNotes.css";
 
-
 const StudyNotes = () => {
   const [notes, setNotes] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -38,7 +37,7 @@ const StudyNotes = () => {
 
   return (
     <div className="study-notes-container">
-      <h1>Study Notes Sharing</h1>
+      <h1 className="first">Study Notes Sharing</h1>
 
       {/* Search Section */}
       <div className="search-section">

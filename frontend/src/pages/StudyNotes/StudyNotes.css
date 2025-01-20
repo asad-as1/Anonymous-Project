@@ -1,43 +1,22 @@
-/* Variables for consistent theming */
-/* :root {
-    --primary-color: #7289da;
-    --primary-hover: #5f73bc;
-    --secondary-color: #43b581;
-    --secondary-hover: #3ca374;
-    --background-dark: #2c2f33;
-    --background-darker: #23272a;
-    --text-light: #ffffff;
-    --text-gray: #99aab5;
-    --card-background: #2f3136;
-    --modal-background: #36393f;
-    --danger-color: #f04747;
-    --transition-speed: 0.3s;
-  } */
-    
-  
-  Base styles
-  /* body {
-    background-color: var(--background-dark);
-    color: var(--text-light);
-    margin: 0;
-    padding: 0;
-    min-height: 100vh;
-  } */
+/* Main Container */
 
-  
-  .study-notes-container {
+.study-notes-container {
     padding: 20px;
     max-width: 1200px;
     margin: 0 auto;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: #10121a; /* Background specific to this container */
+    color: #e4e6eb;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
   }
   
-  /* Animated title */
-  h1 {
+  /* Animated Title */
+  .first {
     text-align: center;
     margin-bottom: 40px;
     font-size: 2.5rem;
-    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+    font-weight: bold;
+    background: linear-gradient(45deg, #4e9bf5, #3ccf91);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -46,59 +25,58 @@
   
   @keyframes titleGlow {
     from {
-      text-shadow: 0 0 10px rgba(114, 137, 218, 0.5);
+      text-shadow: 0 0 10px rgba(78, 155, 245, 0.5);
     }
     to {
-      text-shadow: 0 0 20px rgba(67, 181, 129, 0.5);
+      text-shadow: 0 0 20px rgba(60, 207, 145, 0.5);
     }
   }
   
-  /* Search Section with enhanced styling */
+  /* Search Section */
   .search-section {
     display: flex;
-    gap: 20px;
+    gap: 15px;
     margin-bottom: 30px;
     flex-wrap: wrap;
+    justify-content: center;
   }
   
   .search-bar {
     flex: 1;
-    min-width: 200px;
-    padding: 15px 20px;
+    min-width: 250px;
+    padding: 15px;
     font-size: 1rem;
-    background-color: var(--card-background);
+    background-color: #1f2733;
     border: 2px solid transparent;
-    border-radius: 10px;
-    color: var(--text-light);
-    transition: all var(--transition-speed) ease;
+    border-radius: 8px;
+    color: #ffffff;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
   }
   
   .search-bar:focus {
-    border-color: var(--primary-color);
+    border-color: #4e9bf5;
     outline: none;
-    box-shadow: 0 0 15px rgba(114, 137, 218, 0.3);
+    box-shadow: 0 0 15px rgba(78, 155, 245, 0.4);
   }
   
   .share-notes-button {
     padding: 15px 30px;
-    background-color: var(--primary-color);
-    color: var(--text-light);
+    background-color: #4e9bf5;
+    color: #ffffff;
     border: none;
-    border-radius: 10px;
+    border-radius: 8px;
     cursor: pointer;
     font-size: 1rem;
     font-weight: 600;
-    transition: all var(--transition-speed) ease;
-    transform: translateY(0);
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
   }
   
   .share-notes-button:hover {
-    background-color: var(--primary-hover);
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 5px 15px rgba(78, 155, 245, 0.5);
   }
   
-  /* Modal styling */
+  /* Modal Styling */
   .modal-overlay {
     position: fixed;
     top: 0;
@@ -114,18 +92,22 @@
   }
   
   @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
   }
   
   .modal-content {
-    background-color: var(--modal-background);
+    background-color: #1f2733;
     padding: 30px;
-    border-radius: 15px;
+    border-radius: 12px;
     width: 90%;
     max-width: 500px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     position: relative;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     animation: slideUp 0.3s ease;
   }
   
@@ -140,48 +122,48 @@
     }
   }
   
-  .modal-content h2 {
-    margin: 0 0 20px;
-    text-align: center;
-    color: var(--text-light);
-    font-size: 1.8rem;
-  }
-  
   .close-modal-button {
     position: absolute;
     top: 15px;
     right: 15px;
     background: none;
     border: none;
-    color: var(--text-gray);
+    color: #e4e6eb;
     font-size: 24px;
     cursor: pointer;
-    transition: color var(--transition-speed) ease;
+    transition: color 0.3s ease;
   }
   
   .close-modal-button:hover {
-    color: var(--danger-color);
+    color: #f04747;
   }
   
-  /* Form Fields */
+  .modal-content h2 {
+    margin-bottom: 20px;
+    text-align: center;
+    color: #ffffff;
+    font-size: 1.8rem;
+  }
+  
+  /* Input Fields */
   .input-field,
   .textarea-field {
     width: 100%;
     padding: 12px 15px;
-    background-color: var(--background-darker);
+    background-color: #2c333d;
     border: 2px solid transparent;
     border-radius: 8px;
-    color: var(--text-light);
+    color: #e4e6eb;
     margin-bottom: 15px;
     font-size: 1rem;
-    transition: all var(--transition-speed) ease;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
   }
   
   .input-field:focus,
   .textarea-field:focus {
-    border-color: var(--primary-color);
+    border-color: #3ccf91;
     outline: none;
-    box-shadow: 0 0 10px rgba(114, 137, 218, 0.2);
+    box-shadow: 0 0 10px rgba(60, 207, 145, 0.4);
   }
   
   .textarea-field {
@@ -193,40 +175,39 @@
     width: 100%;
     padding: 10px;
     margin-bottom: 15px;
-    color: var(--text-light);
+    color: #e4e6eb;
   }
   
   .file-input::file-selector-button {
-    background-color: var(--card-background);
-    color: var(--text-light);
+    background-color: #3ccf91;
+    color: #ffffff;
     border: none;
     padding: 8px 15px;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color var(--transition-speed) ease;
+    transition: background-color 0.3s ease;
   }
   
   .file-input::file-selector-button:hover {
-    background-color: var(--primary-color);
+    background-color: #2fa374;
   }
   
   .submit-note-button {
     width: 100%;
     padding: 15px;
-    background-color: var(--secondary-color);
-    color: var(--text-light);
+    background-color: #3ccf91;
+    color: #ffffff;
     border: none;
     border-radius: 8px;
     cursor: pointer;
     font-size: 1rem;
     font-weight: 600;
-    transition: all var(--transition-speed) ease;
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
   }
   
   .submit-note-button:hover {
-    background-color: var(--secondary-hover);
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 5px 15px rgba(60, 207, 145, 0.5);
   }
   
   /* Notes Display */
@@ -238,109 +219,109 @@
   }
   
   .note-card {
-    background-color: var(--card-background);
-    border-radius: 15px;
+    background-color: #2c333d;
+    border-radius: 12px;
     padding: 20px;
-    transition: all var(--transition-speed) ease;
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
     position: relative;
-    overflow: hidden;
-  }
-  
-  .note-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 4px;
-    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform var(--transition-speed) ease;
   }
   
   .note-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-  }
-  
-  .note-card:hover::before {
-    transform: scaleX(1);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
   }
   
   .note-title {
     margin: 0 0 15px;
     font-size: 1.4rem;
-    color: var(--text-light);
+    color: #e4e6eb;
   }
   
   .note-description {
     margin: 0 0 20px;
-    color: var(--text-gray);
+    color: #b0b3b8;
     line-height: 1.5;
   }
   
   .view-note-button {
     display: inline-block;
     padding: 10px 20px;
-    background-color: var(--primary-color);
-    color: var(--text-light);
+    background-color: #4e9bf5;
+    color: #ffffff;
     text-decoration: none;
     border-radius: 8px;
-    transition: all var(--transition-speed) ease;
-    font-weight: 500;
+    transition: background-color 0.3s ease, transform 0.2s ease;
   }
   
   .view-note-button:hover {
-    background-color: var(--primary-hover);
+    background-color: #3b82d6;
     transform: translateY(-2px);
   }
+
   
-  /* Responsive Design */
-  @media (max-width: 768px) {
-    .study-notes-container {
-      padding: 15px;
+
+  /* Starry Background Animation */
+@keyframes starTwinkle {
+    0% {
+      opacity: 0.4;
     }
-  
-    h1 {
-      font-size: 2rem;
+    50% {
+      opacity: 1;
     }
-  
-    .search-section {
-      flex-direction: column;
-    }
-  
-    .search-bar,
-    .share-notes-button {
-      width: 100%;
-    }
-  
-    .notes-container {
-      grid-template-columns: 1fr;
-    }
-  
-    .modal-content {
-      padding: 20px;
-      width: 95%;
+    100% {
+      opacity: 0.4;
     }
   }
   
-  /* Loading Animation for async operations */
-  .loading {
-    position: relative;
-  }
-  
-  .loading::after {
-    content: '';
+  .starry-background {
     position: absolute;
-    width: 20px;
-    height: 20px;
-    border: 3px solid var(--text-gray);
-    border-radius: 50%;
-    border-top-color: var(--primary-color);
-    animation: spin 1s linear infinite;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: black;
+    z-index: -1;
+    overflow: hidden;
   }
   
-  @keyframes spin {
-    to { transform: rotate(360deg); }
+  .stars {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+  }
+  
+  .star {
+    position: absolute;
+    background-color: white;
+    border-radius: 50%;
+    animation: starTwinkle 2s infinite ease-in-out;
+  }
+  
+  .star:nth-child(odd) {
+    animation-duration: 2s;
+  }
+  
+  .star:nth-child(even) {
+    animation-duration: 3s;
+  }
+  
+  .star:nth-child(3n) {
+    animation-duration: 4s;
+  }
+  
+  @media (max-width: 768px) {
+    .star {
+      width: 1px;
+      height: 1px;
+    }
+  }
+  
+  @media (min-width: 768px) {
+    .star {
+      width: 3px;
+      height: 3px;
+    }
   }

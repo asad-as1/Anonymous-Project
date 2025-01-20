@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import "./StudyNotes.css";
 
 
-
-
 const StudyNotes = () => {
   const [notes, setNotes] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");

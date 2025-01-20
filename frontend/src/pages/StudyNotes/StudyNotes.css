@@ -1,5 +1,5 @@
 /* Variables for consistent theming */
-:root {
+/* :root {
     --primary-color: #7289da;
     --primary-hover: #5f73bc;
     --secondary-color: #43b581;
@@ -12,17 +12,17 @@
     --modal-background: #36393f;
     --danger-color: #f04747;
     --transition-speed: 0.3s;
-  }
+  } */
     
   
   Base styles
-  body {
+  /* body {
     background-color: var(--background-dark);
     color: var(--text-light);
     margin: 0;
     padding: 0;
     min-height: 100vh;
-  }
+  } */
 
   
   .study-notes-container {

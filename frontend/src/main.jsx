@@ -5,6 +5,8 @@ import Home from './Pages/Home/Home.jsx';
 import './index.css';
 import App from './App.jsx';
 import TextReader from "./pages/TextReader/TextReader.jsx"
+import QnA from "./pages/Q&A/Q&A.jsx"
+import StudyNotes from "./pages/StudyNotes/StudyNotes.jsx"
 
 const router = createBrowserRouter([
   {
@@ -19,6 +21,15 @@ const router = createBrowserRouter([
         path: '/textreader',
         element: <TextReader />,
       },
+      {
+        path: '/queandans',
+        element: <QnA />,
+      },
+      {
+        path: '/studynotes',
+        element: <StudyNotes />,
+      },
+      
     ],
   },
 ]);

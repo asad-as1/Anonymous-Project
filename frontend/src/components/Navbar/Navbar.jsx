@@ -28,9 +28,10 @@ const Navbar = () => {
     <nav className="navbar">
       <Link to="/" className="logo">EduAccess</Link>
       <div ref={menuRef} className={`nav-links ${menuOpen ? 'active' : ''}`}>
+      <Link to="/">Home</Link>
         <Link to="/textreader">Text Reader</Link>
-        <Link to="/about">About</Link>
-        <Link to="/contact">Contact</Link>
+        <Link to="/queandans">Q&A</Link>
+        <Link to="/studynotes">Study Notes</Link>
         <Link to="/login">Login</Link>
       </div>
       <div className="hamburger" onClick={toggleMenu}>

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { login } from "./Login.jsx";
-import { upload } from "../firebase.js";
+// import { login } from "./Login.jsx";
+// import { upload } from "../firebase.js";
 import axios from "axios";
 import Cookie from "cookies-js";
 import { FaEye, FaEyeSlash } from "react-icons/fa";

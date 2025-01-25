@@ -8,6 +8,7 @@ import TextReader from "./pages/TextReader/TextReader.jsx"
 import QnA from "./pages/Q&A/Q&A.jsx"
 import StudyNotes from "./pages/StudyNotes/StudyNotes.jsx"
 import TakeATest from "./pages/Take A Test/TakeATest.jsx"
+import Summarization from "./pages/Summarization/Summarization.jsx"
 
 const router = createBrowserRouter([
   {
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
       {
         path: '/takeatest',
         element: <TakeATest />,
+      },
+      {
+        path: '/summarization',
+        element: <Summarization />,
       },
       
     ],

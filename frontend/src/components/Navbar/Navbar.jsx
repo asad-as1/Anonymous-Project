@@ -35,6 +35,7 @@ const Navbar = () => {
         <Link to="/takeatest">Take A Test</Link>
         <Link to="/summarization">Summarization</Link>
         <Link to="/login">Login</Link>
+        <Link to="/signup">SignUp</Link>
       </div>
       <div className="hamburger" onClick={toggleMenu}>
         <span></span>

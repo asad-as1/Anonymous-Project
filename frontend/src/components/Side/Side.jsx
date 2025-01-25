@@ -6,7 +6,7 @@ const Side = () => {
   return (
     <div className="side-container">
       <div className="side-content">
-        <h1 className="side-title">Welcome to My BlogBuddy website</h1>
+        <h1 className="side-title">Welcome to My EduAccess website</h1>
         <p className="side-description">
           Discover a world of opportunities, connection, and growth.
         </p>

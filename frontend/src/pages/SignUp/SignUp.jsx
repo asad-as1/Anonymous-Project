@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 // import { login } from "./Login.jsx";
-// import { upload } from "../firebase.js";
+import { upload } from "../../firebase.js";
 import axios from "axios";
 import Cookie from "cookies-js";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
@@ -53,10 +53,7 @@ function Signup({ user }) {
 
       let res;
       if (user) {
-        res = await axios.put(`${import.meta.env.VITE_URL}user/profile`, data, {
-          headers: { Authorization: Bearer `${token}` },
-          withCredentials: true,
-        });
+        res = await axios.put(`${import.meta.env.VITE_URL}user/profile`, data);
         if (res?.status === 201) {
           await Swal.fire({
             icon: "success",
@@ -68,7 +65,8 @@ function Signup({ user }) {
           });
         }
       } else {
-        res = await axios.post(`${import.meta.env.VITE_URL}user/register`, data);
+        res = await axios.post(`${import.meta.env.VITE_URL}/user/register`, data);
+        // console.log(res)
         if (res?.status === 201) {
           await Swal.fire({
             icon: "success",

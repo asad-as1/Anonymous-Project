@@ -20,7 +20,7 @@ const port =  5000;
 
 // Middleware setup
 app.use(cors({
-  origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
+  origin: process.env.CORS_ORIGIN,
   methods: ['GET', 'POST'],
   allowedHeaders: ['Content-Type'],
 }));
@@ -33,7 +33,7 @@ app.use(express.static('public'));
 // Database connection
 const connectDB = async () => {
   try {
-    // await mongoose.connect(process.env.ATLASDB_URL);
+    await mongoose.connect(process.env.ATLASDB_URL);
     console.log('Database connected');
   } catch (error) {
     console.error('Error while connecting to the database', error);
@@ -49,6 +49,12 @@ const upload = multer({ storage });
 app.get('/', (req, res) => {
   res.send('Server is running');
 });
+
+const userRouter = require('./src/routes/user');
+// const postRouter = require('./src/router/post.');
+app.use("/user", userRouter);
+// app.use("/post", postRouter);
+
 
 app.post('/textreader', upload.single('file'), (req, res) => {
   const fileBuffer = req.file.buffer;

@@ -10,6 +10,7 @@ import StudyNotes from "./pages/StudyNotes/StudyNotes.jsx"
 import SignUp from "./pages/SignUp/SignUp.jsx"
 import TakeATest from "./pages/Take A Test/TakeATest.jsx"
 import Summarization from "./pages/Summarization/Summarization.jsx"
+import Login from "./pages/Login/Login.jsx"
 
 const router = createBrowserRouter([
   {
@@ -43,6 +44,10 @@ const router = createBrowserRouter([
       {
         path: '/summarization',
         element: <Summarization />,
+      },
+      {
+        path: '/login',
+        element: <Login />,
       },
       
     ],

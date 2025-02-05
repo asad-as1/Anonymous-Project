@@ -8,6 +8,33 @@ import Swal from "sweetalert2";
 import Side from "../../components/Side/Side.jsx";
 import "./Login.css";
 
+export const login = async (data, navigate, setApiError, from) => {
+  try {
+    const res = await axios.post(`${import.meta.env.VITE_URL}/user/login`, data);
+    if (res?.status === 200) {
+      Cookie.set("user", res.data.token, { secure: true });
+
+      Swal.fire({
+        icon: "success",
+        title: "Login Successful",
+        text: "You are now logged in!",
+        timer: 1500,
+        showConfirmButton: false,
+      }).then(() => {
+        navigate(from || "/");
+      });
+    }
+  } catch (error) {
+    const errorMessage = error.response?.data?.message || "Login failed. Please try again.";
+    Swal.fire({
+      icon: "error",
+      title: "Login Failed",
+      text: errorMessage,
+    });
+    setApiError(errorMessage);
+  }
+};
+
 function Login({ user }) {
   const {
     register,
@@ -18,43 +45,20 @@ function Login({ user }) {
 
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [apiError, setApiError] = useState("");
 
   useEffect(() => {
     if (user) {
-      reset({
-        username: user.username || "",
-        name: user.name || "",
-        email: user.email || "",
-        bio: user.bio || "",
-      });
+      reset({ username: user.username || "" });
     }
   }, [user, reset]);
 
-  const handleLogin = async (data) => {
-    try {
-      const res = await axios.post(`${import.meta.env.VITE_URL}/user/login`, data);
-      if (res?.status === 200) {
-        await Swal.fire({
-          icon: "success",
-          title: "Successfully Logged In",
-          confirmButtonText: "OK",
-        });
-        Cookie.set("token", res.data.token);
-        navigate("/");
-      }
-    } catch (error) {
-      const errorMessage = error?.response?.data?.message || "Something went wrong!";
-      await Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: errorMessage,
-        confirmButtonText: "OK",
-      });
-    }
-  };
-
   const togglePasswordVisibility = () => {
     setShowPassword((prevState) => !prevState);
+  };
+
+  const handleLogin = async (formData) => {
+    await login(formData, navigate, setApiError);
   };
 
   return (
@@ -85,15 +89,10 @@ function Login({ user }) {
                   placeholder="Enter your password"
                   {...register("password", {
                     required: "Password is required",
-                    validate: {
-                      minLength: (value) =>
-                        value.length >= 8 || "Password must be at least 8 characters",
-                      hasUpperCase: (value) =>
-                        /[A-Z]/.test(value) || "Must contain at least one uppercase letter",
-                      hasSpecialChar: (value) =>
-                        /[!@#$%^&*(),.?":{}|<>]/.test(value) || "Must contain at least one special character",
-                      hasDigit: (value) =>
-                        /\d/.test(value) || "Must contain at least one digit",
+                    minLength: { value: 8, message: "Password must be at least 8 characters" },
+                    pattern: {
+                      value: /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/,
+                      message: "Must contain uppercase, number, and special character",
                     },
                   })}
                 />
@@ -103,6 +102,8 @@ function Login({ user }) {
               </div>
               {errors.password && <p className="error">{errors.password.message}</p>}
             </div>
+
+            {apiError && <p className="error">{apiError}</p>}
 
             <button type="submit" className="submit-button">Login</button>
           </form>

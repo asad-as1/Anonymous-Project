@@ -6,10 +6,8 @@ const { authenticate } = require('../middlewares/auth');
 
 router.post('/register', userController.register);
 router.post('/login', userController.login);
+router.post('/profile', authenticate, userController.getProfile);
 
-// router.get('/check-auth', authenticate, isAuthenticated.checkAuth);
-// router.post('/logout', userController.logout);
-// router.get('/profile', authenticate, userController.getProfile);
 // router.get('/profile/:username', authenticate, userController.getUsername);
 // router.post('/username', userController.getUsernameById);
 // router.post('/getUserById', userController.getUserById);

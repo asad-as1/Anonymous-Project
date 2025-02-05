@@ -17,6 +17,7 @@ exports.register = async (req, res) => {
     
     const newUser = new User({ username, fullName:name, email, password, profilepic: profilePicture ?? undefined, bio });
     await newUser.save();
+    // console.log(newUser)
     
     res.status(201).json({ message: 'User registered successfully', user: newUser });
   } catch (error) {
@@ -58,23 +59,12 @@ exports.login = async (req, res) => {
   }
 };
 
-// Logout the user
-exports.logout = (req, res) => {
-  try {
-    // Clear the token from the client-side (assuming it's stored in cookies)
-    res.clearCookie('token'); // or res.cookie('token', '', { expires: new Date(0) });
-
-    res.status(200).json({ message: 'Logout successful' });
-  } catch (error) {
-    res.status(500).json({ message: 'Server error', error });
-  }
-};
 
 // Get user profile
 exports.getProfile = async (req, res) => {
   // console.log(req.user);
   try {
-    const user = await User.findById(req.user.id).select('-password').populate('posts'); // Exclude the password field
+    const user = await User.findById(req.user.id).select('-password') // Exclude the password field
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }

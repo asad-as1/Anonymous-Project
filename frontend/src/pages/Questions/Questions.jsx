@@ -21,7 +21,10 @@ const Questions = () => {
   const fetchQuestionById = () => {
     axios
       .post(`${import.meta.env.VITE_URL}/qna/questions/${id}`, { token: user })
-      .then((response) => setQuestion(response.data))
+      .then((response) => {
+        // console.log(response.data)
+        setQuestion(response.data)
+    })
       .catch((error) => console.error('Error fetching question:', error));
   };
 
@@ -121,7 +124,7 @@ const Questions = () => {
           <p className="question-details-text">{question.details}</p>
           {userProfile && (
             <p className="user-profile-text">
-              Asked by: {userProfile.fullName} ({userProfile.username})
+              Asked by: {question.user.fullName} ({question.user.username})
             </p>
           )}
           {question.user._id === userProfile._id && (

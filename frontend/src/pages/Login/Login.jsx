@@ -10,7 +10,10 @@ import "./Login.css";
 
 export const login = async (data, navigate, setApiError, from) => {
   try {
-    const res = await axios.post(`${import.meta.env.VITE_URL}/user/login`, data);
+    const res = await axios.post(
+      `${import.meta.env.VITE_URL}/user/login`,
+      data
+    );
     if (res?.status === 200) {
       Cookie.set("user", res.data.token, { secure: true });
 
@@ -25,7 +28,8 @@ export const login = async (data, navigate, setApiError, from) => {
       });
     }
   } catch (error) {
-    const errorMessage = error.response?.data?.message || "Login failed. Please try again.";
+    const errorMessage =
+      error.response?.data?.message || "Login failed. Please try again.";
     Swal.fire({
       icon: "error",
       title: "Login Failed",
@@ -78,7 +82,9 @@ function Login({ user }) {
                 placeholder="Username"
                 {...register("username", { required: "Username is required" })}
               />
-              {errors.username && <p className="error">{errors.username.message}</p>}
+              {errors.username && (
+                <p className="error">{errors.username.message}</p>
+              )}
             </div>
 
             <div className="form-group">
@@ -89,23 +95,43 @@ function Login({ user }) {
                   placeholder="Enter your password"
                   {...register("password", {
                     required: "Password is required",
-                    minLength: { value: 8, message: "Password must be at least 8 characters" },
+                    minLength: {
+                      value: 8,
+                      message: "Password must be at least 8 characters",
+                    },
                     pattern: {
-                      value: /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/,
-                      message: "Must contain uppercase, number, and special character",
+                      value:
+                        /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/,
+                      message:
+                        "Must contain uppercase, number, and special character",
                     },
                   })}
                 />
-                <span onClick={togglePasswordVisibility} className="toggle-password">
+                <span
+                  onClick={togglePasswordVisibility}
+                  className="toggle-password"
+                >
                   {showPassword ? <FaEyeSlash /> : <FaEye />}
                 </span>
               </div>
-              {errors.password && <p className="error">{errors.password.message}</p>}
+              {errors.password && (
+                <p className="error">{errors.password.message}</p>
+              )}
+            </div>
+            <div className="form-header">
+              <p>
+                Don't have an account?{" "}
+                <Link to="/signup" className="link">
+                  Sign Up 
+                </Link>
+              </p>
             </div>
 
             {apiError && <p className="error">{apiError}</p>}
 
-            <button type="submit" className="submit-button">Login</button>
+            <button type="submit" className="submit-button">
+              Login
+            </button>
           </form>
         </div>
       </div>

@@ -51,9 +51,10 @@ app.get('/', (req, res) => {
 });
 
 const userRouter = require('./src/routes/user');
-// const postRouter = require('./src/router/post.');
+const qaRoutes = require('./src/routes/QnA');
 app.use("/user", userRouter);
-// app.use("/post", postRouter);
+app.use('/qna', qaRoutes);
+
 
 
 app.post('/textreader', upload.single('file'), (req, res) => {

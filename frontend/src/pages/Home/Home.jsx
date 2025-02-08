@@ -4,10 +4,12 @@ import './Home.css';
 import img1 from "../../img/img1.jpg"
 import img2 from "../../img/img2.jpg"
 import {Link} from "react-router-dom"
+import Cookies from 'cookies-js';
 
 const Home = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
 
+  const user = Cookies.get("user")
   const features = [
     {
       icon: <FileText />,
@@ -60,7 +62,8 @@ const Home = () => {
             Experience education reimagined through innovative technology and accessibility
           </p>
           {/* <button className="cta-button"> */}
-            <Link className='cta-button' to="/register">Get Started</Link>
+            {(!user && 
+            <Link className='cta-button' to="/signup">Get Started</Link>)}
         </div>
       </section>
 
@@ -75,7 +78,7 @@ const Home = () => {
           >
             {features.map((feature, index) => (
               <div key={index} className="feature-card">
-                <div className="feature-icon">{feature.icon}</div>
+                <div className="feature-icons">{feature.icon}</div>
                 <h3 className="feature-title">{feature.title}</h3>
                 <p className="feature-description">{feature.description}</p>
               </div>
@@ -141,7 +144,10 @@ const Home = () => {
               Experience seamless accessibility features and intuitive interface.
             </p>
             <div className="db">
-                <Link to="/register" className="demo-button">Sign Up Now</Link>
+              {
+                (!user && 
+                <Link to="/signup" className="demo-button">Sign Up Now</Link>
+              )}
             </div>
           </div>
           <div className="demo-preview">

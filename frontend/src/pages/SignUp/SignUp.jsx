@@ -102,12 +102,7 @@ function Signup({ user }) {
           {!user && (
             <div className="form-header">
               <h2>Sign up to create an account</h2>
-              <p>
-                Already have an account?{" "}
-                <Link to="/login" className="link">
-                  Sign In
-                </Link>
-              </p>
+              
             </div>
           )}
 
@@ -204,9 +199,18 @@ function Signup({ user }) {
               <label>Profile Picture:</label>
               <input type="file" {...register("profilePicture")} />
             </div>
+            <div className="form-header">
+              <p>
+                Already have an account?{" "}
+                <Link to="/login" className="link">
+                  Sign In
+                </Link>
+              </p>
+            </div>
             <button type="submit" className="submit-btn">
               {user ? "Save Changes" : "Create Account"}
             </button>
+            
           </form>
         </div>
       </div>

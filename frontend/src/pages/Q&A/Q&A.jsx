@@ -1,34 +1,63 @@
-// QnA.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import Cookies from "cookies-js";
 import './Q&A.css';
 
 const QnA = () => {
-  const [questions, setQuestions] = useState([
-    { id: 1, title: 'What is React?', details: 'I want to understand the basics of React.' },
-    { id: 2, title: 'How does CSS grid work?', details: 'Explain CSS grid layout with examples.' },
-    { id: 3, title: 'What is useState in React?', details: 'How does the useState hook function in React?' },
-    { id: 4, title: 'Best practices for JavaScript?', details: 'Share some essential JavaScript best practices.' },
-    { id: 5, title: 'Difference between let and var?', details: 'Explain the difference between let and var in JavaScript.' }
-  ]);
-  
+  const [questions, setQuestions] = useState([]);
   const [selectedQuestion, setSelectedQuestion] = useState(null);
   const [answers, setAnswers] = useState({});
   const [newAnswer, setNewAnswer] = useState('');
   const [newQuestion, setNewQuestion] = useState({ title: '', details: '' });
   const [showQuestionForm, setShowQuestionForm] = useState(false);
+  const user = Cookies.get("user")
+
+  useEffect(() => {
+    axios
+      .post(`${import.meta.env.VITE_URL}/qna/allquestions`, 
+        {
+          token: user,
+        }
+      )
+      .then((response) => {
+        console.log(response)
+        setQuestions(Array.isArray(response.data) ? response.data : []);
+      })
+      .catch((error) => console.error('Error fetching questions:', error));
+  }, []);
 
   const handleQuestionClick = (question) => {
     setSelectedQuestion(question);
+    axios
+      .get(`${import.meta.env.VITE_URL}/qna/questions/${question._id}`)
+      .then((response) => setAnswers({ [question._id]: response.data.answers }))
+      .catch((error) => console.error('Error fetching answers:', error));
   };
 
-  const handleAnswerSubmit = () => {
-    if (!newAnswer.trim()) return;
-    setAnswers({
-      ...answers,
-      [selectedQuestion.id]: [...(answers[selectedQuestion.id] || []), newAnswer],
+ const handleAnswerSubmit = () => {
+  if (!newAnswer.trim()) return;
+
+  axios
+    .post(`${import.meta.env.VITE_URL}/qna/questions/${selectedQuestion._id}/answers`, {
+      text: newAnswer,
+      user: user || 'anonymous',
+    })
+    .then((response) => {
+      if (response.data && response.data._id) {
+        setAnswers((prevAnswers) => ({
+          ...prevAnswers,
+          [selectedQuestion._id]: [...(prevAnswers[selectedQuestion._id] || []), response.data],
+        }));
+        setNewAnswer('');
+      } else {
+        console.warn('Unexpected response structure:', response.data);
+      }
+    })
+    .catch((error) => {
+      console.error('Error adding answer:', error);
     });
-    setNewAnswer('');
-  };
+};
+
 
   const handleBack = () => {
     setSelectedQuestion(null);
@@ -40,14 +69,17 @@ const QnA = () => {
 
   const handleQuestionSubmit = () => {
     if (!newQuestion.title.trim() || !newQuestion.details.trim()) return;
-    const newQuestionObj = {
-      id: questions.length + 1,
-      title: newQuestion.title,
-      details: newQuestion.details,
-    };
-    setQuestions([...questions, newQuestionObj]);
-    setShowQuestionForm(false);
-    setNewQuestion({ title: '', details: '' });
+    axios
+      .post(`${import.meta.env.VITE_URL}/qna/questions`, {
+        ...newQuestion,
+        token: user,
+      })
+      .then((response) => {
+        setQuestions([...questions, response.data]);
+        setShowQuestionForm(false);
+        setNewQuestion({ title: '', details: '' });
+      })
+      .catch((error) => console.error('Error adding question:', error));
   };
 
   return (
@@ -57,19 +89,19 @@ const QnA = () => {
           <button className="back-button" onClick={handleBack}>
             <span className="back-arrow">←</span> Back
           </button>
-          
+
           <div className="question-content">
             <h1 className="question-title">{selectedQuestion.title}</h1>
             <p className="question-details">{selectedQuestion.details}</p>
-            
+
             <div className="answers-section">
               <h2>Answers</h2>
-              {(answers[selectedQuestion.id] || []).map((answer, index) => (
+              {(answers[selectedQuestion._id] || []).map((answer, index) => (
                 <div key={index} className="answer-card">
-                  {answer}
+                  {answer.text}
                 </div>
               ))}
-              
+
               <div className="answer-form">
                 <textarea
                   value={newAnswer}
@@ -92,11 +124,11 @@ const QnA = () => {
               Ask Question
             </button>
           </div>
-          
+
           <div className="questions-grid">
-            {questions.map((question) => (
+            {Array.isArray(questions) && questions.map((question) => (
               <div
-                key={question.id}
+                key={question._id}
                 className="question-card"
                 onClick={() => handleQuestionClick(question)}
               >
@@ -105,7 +137,7 @@ const QnA = () => {
               </div>
             ))}
           </div>
-          
+
           {showQuestionForm && (
             <div className="modal-overlay">
               <div className="question-form">
@@ -124,13 +156,13 @@ const QnA = () => {
                   className="form-textarea"
                 />
                 <div className="form-buttons">
-                  <button 
+                  <button
                     className="cancel-button"
                     onClick={() => setShowQuestionForm(false)}
                   >
                     Cancel
                   </button>
-                  <button 
+                  <button
                     className="submit-button"
                     onClick={handleQuestionSubmit}
                   >

@@ -29,22 +29,24 @@ exports.addQuestion = async (req, res) => {
 // Add a new answer
 exports.addAnswer = async (req, res) => {
   try {
-    const { text, questionId } = req.body;
-
+    const questionId = req.params?.questionId
+    const { text } = req.body;
+    
     if (!text || !questionId) {
       return res.status(400).json({ error: 'Text and questionId are required.' });
     }
-
+    
     const question = await Question.findById(questionId);
     if (!question) {
       return res.status(404).json({ error: 'Question not found.' });
     }
-
+    
     const answer = new Answer({
       text,
-      user: req.user._id,
+      user: req.user.id,
       question: questionId,
     });
+    // console.log(answer)
 
     await answer.save();
 

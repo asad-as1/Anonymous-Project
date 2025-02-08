@@ -4,6 +4,10 @@
   position: relative; /* Enables vertical adjustments */
 }
 
+/* .sl{
+  margin-bottom: 50px;
+} */
+
 .form-container {
   display: flex;
   justify-content: center;

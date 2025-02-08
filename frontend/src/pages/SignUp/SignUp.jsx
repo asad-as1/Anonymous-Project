@@ -102,7 +102,7 @@ function Signup({ user }) {
 
   return (
     <div className="signup-container">
-      <Side />
+        < Side />
 
       <div className="form-container">
         <div className="form-box">

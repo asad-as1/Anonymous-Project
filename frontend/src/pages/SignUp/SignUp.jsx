@@ -25,8 +25,15 @@ function Signup({ user }) {
     },
   });
 
-  const token = Cookie.get("token");
+  const token = Cookie.get("user");
   const navigate = useNavigate();
+  
+  useEffect(() => {
+    if (token) {
+      navigate("/"); 
+    }
+  }, [token, navigate]);
+
   const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
@@ -53,7 +60,7 @@ function Signup({ user }) {
 
       let res;
       if (user) {
-        res = await axios.put(`${import.meta.env.VITE_URL}user/profile`, data);
+        res = await axios.put(`${import.meta.env.VITE_URL}/user/profile`, data);
         if (res?.status === 201) {
           await Swal.fire({
             icon: "success",

@@ -1,5 +1,8 @@
 import React, { useState } from "react";
+import axios from "axios"; // Import axios for API calls
+import { upload } from "../../firebase.js";
 import "./StudyNotes.css";
+import Cookie from "cookies-js";
 
 const StudyNotes = () => {
   const [notes, setNotes] = useState([]);
@@ -8,25 +11,37 @@ const StudyNotes = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [file, setFile] = useState(null);
+  const token = Cookie.get("user");
 
-  const handleAddNote = () => {
+  const handleAddNote = async () => {
     if (!title || !description || !file) {
       alert("Please fill in all fields and upload a file.");
       return;
     }
 
-    const newNote = {
-      id: Date.now(),
-      title,
-      description,
-      file,
-    };
+    try {
+      const fileUrl = await upload(file);
+      
+      const newNote = {
+        title,
+        description,
+        file: fileUrl,
+      };
+      
+      const response = await axios.post(`${import.meta.env.VITE_URL}/notes/studynotes`, {newNote, token});
+      console.log(response)
+      const savedNote = response.data;
 
-    setNotes([newNote, ...notes]);
-    setTitle("");
-    setDescription("");
-    setFile(null);
-    setShowModal(false);
+      // Update UI with new note
+      setNotes([savedNote, ...notes]);
+      setTitle("");
+      setDescription("");
+      setFile(null);
+      setShowModal(false);
+    } catch (error) {
+      console.error("Error adding note:", error);
+      alert("Failed to add note. Please try again.");
+    }
   };
 
   const filteredNotes = notes.filter(
@@ -48,10 +63,7 @@ const StudyNotes = () => {
           onChange={(e) => setSearchQuery(e.target.value)}
           className="search-bar"
         />
-        <button
-          onClick={() => setShowModal(true)}
-          className="share-notes-button"
-        >
+        <button onClick={() => setShowModal(true)} className="share-notes-button">
           Share Notes
         </button>
       </div>
@@ -60,10 +72,7 @@ const StudyNotes = () => {
       {showModal && (
         <div className="modal-overlay">
           <div className="modal-content">
-            <button
-              className="close-modal-button"
-              onClick={() => setShowModal(false)}
-            >
+            <button className="close-modal-button" onClick={() => setShowModal(false)}>
               &times;
             </button>
             <h2>Share Your Note</h2>
@@ -96,16 +105,11 @@ const StudyNotes = () => {
       {/* Notes Display Section */}
       <div className="notes-container">
         {filteredNotes.map((note) => (
-          <div key={note.id} className="note-card">
+          <div key={note._id} className="note-card">
             <h2 className="note-title">{note.title}</h2>
             <p className="note-description">{note.description}</p>
             {note.file && (
-              <a
-                href={URL.createObjectURL(note.file)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="view-note-button"
-              >
+              <a href={note.file} target="_blank" rel="noopener noreferrer" className="view-note-button">
                 View Note
               </a>
             )}

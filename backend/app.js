@@ -52,8 +52,11 @@ app.get('/', (req, res) => {
 
 const userRouter = require('./src/routes/user');
 const qaRoutes = require('./src/routes/QnA');
+const noteRouter = require('./src/routes/notes');
+
 app.use("/user", userRouter);
 app.use('/qna', qaRoutes);
+app.use("/notes", noteRouter);
 
 
 

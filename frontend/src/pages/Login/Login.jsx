@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import Cookie from "cookies-js";
@@ -10,10 +10,10 @@ import "./Login.css";
 
 export const login = async (data, navigate, setApiError, from) => {
   try {
-    const res = await axios.post(
-      `${import.meta.env.VITE_URL}/user/login`,
-      data
-    );
+
+    const res = await axios.post(`${import.meta.env.VITE_URL}/user/login`, data);
+    // console.log("Redirecting to:", from); // Debugging
+
     if (res?.status === 200) {
       Cookie.set("user", res.data.token, { secure: true });
 
@@ -24,7 +24,7 @@ export const login = async (data, navigate, setApiError, from) => {
         timer: 1500,
         showConfirmButton: false,
       }).then(() => {
-        navigate(from || "/");
+        navigate(from, { replace: true });
       });
     }
   } catch (error) {
@@ -39,6 +39,7 @@ export const login = async (data, navigate, setApiError, from) => {
   }
 };
 
+
 function Login({ user }) {
   const {
     register,
@@ -47,7 +48,17 @@ function Login({ user }) {
     formState: { errors },
   } = useForm();
 
+  
   const navigate = useNavigate();
+  const token = Cookie.get("user");
+  
+  useEffect(() => {
+    if (token) {
+      navigate("/"); 
+    }
+  }, [token, navigate]);
+
+  const location = useLocation();
   const [showPassword, setShowPassword] = useState(false);
   const [apiError, setApiError] = useState("");
 
@@ -62,7 +73,8 @@ function Login({ user }) {
   };
 
   const handleLogin = async (formData) => {
-    await login(formData, navigate, setApiError);
+    const from = location.state?.from?.pathname || "/"; // Get the previous route
+    await login(formData, navigate, setApiError, from);
   };
 
   return (
@@ -133,6 +145,12 @@ function Login({ user }) {
               Login
             </button>
           </form>
+
+          <div className="register-link">
+            <p>
+              Don't have an account? <Link to="/register">Sign Up</Link>
+            </p>
+          </div>
         </div>
       </div>
     </div>

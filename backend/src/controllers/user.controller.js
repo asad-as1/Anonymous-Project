@@ -75,35 +75,6 @@ exports.getProfile = async (req, res) => {
   }
 };
 
-exports.getUsername = async (req, res) => {
-  try {
-    const {username} = req.params;
-    // console.log(username)
-    const user = await User.findOne({ username }).select('-password').populate('posts');
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-
-    const isOwnProfile = req.user.username === username;
-    res.status(200).json({ user, isOwnProfile });
-  } catch (error) {
-    res.status(500).json({ message: 'Server error', error });
-  }
-};
-
-exports.getUsernameById = async (req, res) => {
-  try {
-    const { id } = req.body;
-    const user = await User.findById(id).select('-password');
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-    let username = user.username
-    res.status(200).json({ username });
-  } catch (error) {
-    res.status(500).json({ message: 'Server error', error });
-  }
-};
 
 // Get user by ID
 exports.getUserById = async (req, res) => {

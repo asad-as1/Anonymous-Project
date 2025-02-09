@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Button, Card, CardContent, TextField, Typography } from "@mui/material";
+import {
+  Button,
+  Card,
+  CardContent,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Cookies from "cookies-js";
@@ -66,7 +72,10 @@ const SingleNote = () => {
           if (note.fileUrl) {
             await deleteFileFromFirebase(note.fileUrl);
           }
-          await axios.post(`${import.meta.env.VITE_URL}/mynotes/deleteNote/${id}`, { token });
+          await axios.post(
+            `${import.meta.env.VITE_URL}/mynotes/deleteNote/${id}`,
+            { token }
+          );
           Swal.fire("Deleted!", "Your note has been deleted.", "success");
           navigate("/mynotes");
         } catch (error) {
@@ -84,7 +93,7 @@ const SingleNote = () => {
       if (note.fileUrl) {
         await deleteFileFromFirebase(note.fileUrl);
       }
-      fileUrl = await upload(file);
+      fileUrl = await upload(newFile);
     }
 
     const updatedNoteData = {
@@ -120,14 +129,14 @@ const SingleNote = () => {
               className="note-iframe"
               frameBorder="0"
             />
-          )} 
-          {((note.shortNote && note.fileUrl) ? (
-              <p>Short Note: {note.shortNote}</p>
+          )}
+          {note.shortNote && note.fileUrl ? (
+            <p>Short Note: {note.shortNote}</p>
           ) : (
             <div className="note-text-content">
-                <p>{note.shortNote}</p>
-             </div>
-        ))}
+              <p>{note.shortNote}</p>
+            </div>
+          )}
 
           <div className="note-actions">
             <Button
@@ -137,7 +146,11 @@ const SingleNote = () => {
             >
               {showUpdateForm ? "Cancel Update" : "Update Note"}
             </Button>
-            <Button variant="contained" color="secondary" onClick={handleDelete}>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={handleDelete}
+            >
               Delete Note
             </Button>
           </div>
@@ -162,13 +175,15 @@ const SingleNote = () => {
                   fullWidth
                   margin="normal"
                   value={note.shortNote}
-                  onChange={(e) => setNote({ ...note, shortNote: e.target.value })}
+                  onChange={(e) =>
+                    setNote({ ...note, shortNote: e.target.value })
+                  }
                 />
 
                 <input
                   type="file"
                   onChange={(e) => setNewFile(e.target.files[0])}
-                  accept=".pdf,.docx,.txt"
+                  accept=".pdf,.docx,.txt,.jpg,.jpeg,.png"
                   style={{ marginBottom: "1rem", display: "block" }}
                 />
 

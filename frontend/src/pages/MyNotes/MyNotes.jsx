@@ -11,24 +11,61 @@ import './MyNotes.css';
 const NotesPage = () => {
   const [showForm, setShowForm] = useState(false);
   const [title, setTitle] = useState('');
+  const [user, setUser] = useState();
   const [textContent, setTextContent] = useState('');
   const [file, setFile] = useState(null);
   const [notes, setNotes] = useState([]);
 
   const token = Cookies.get('user');
+  const BACKEND_URL = import.meta.env.VITE_URL;
+  // console.log(token)
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const response = await axios.post(`${BACKEND_URL}/user/profile`, {
+          token,
+        });
+        // console.log(response.data.user)
+        setUser(response.data.user);
+      } catch (error) {
+        setUser(null);
+      }
+    };
+
+    if (token) {
+      checkAuth();
+    } else {
+      setUser(null);
+    }
+  }, [token]);
 
   const fetchNotes = async () => {
-    try {
-      const response = await axios.post(`${import.meta.env.VITE_URL}/mynotes/getAllNotes`, { token });
-      setNotes(response.data);
-    } catch (error) {
-      console.error('Error fetching notes:', error);
+    // console.log(user?.role)
+    if(user?.role !== 'admin') {
+      try {
+        const response = await axios.post(`${import.meta.env.VITE_URL}/mynotes/getAllNotes`, { token });
+        setNotes(response.data);
+      } catch (error) {
+        console.error('Error fetching notes:', error);
+      }
+    }
+    else {
+      try {
+        const response = await axios.post(`${import.meta.env.VITE_URL}/mynotes/getAllUsersNotes`, { token });
+        setNotes(response.data);
+        // console.log(notes)
+      } catch (error) {
+        console.error('Error fetching notes:', error);
+      }
     }
   };
 
   useEffect(() => {
-    fetchNotes();
-  }, []);
+    if(user) {
+      fetchNotes();
+    }
+  }, [user]);
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
@@ -145,7 +182,7 @@ const NotesPage = () => {
 
       <div className="notes-list-container">
         {notes.map((note, index) => (
-          <NoteCard key={index} title={note.title} id={note._id} shortNote={note.shortNote} fileUrl={note.fileUrl} />
+          <NoteCard key={index} title={note.title} id={note._id} shortNote={note.shortNote} author={note?.author} role={user?.role} />
         ))}
       </div>
     </div>

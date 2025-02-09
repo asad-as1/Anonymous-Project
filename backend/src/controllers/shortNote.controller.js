@@ -89,3 +89,20 @@ exports.deleteShortNote = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+
+// Get all short notes of all users
+exports.getAllUsersNotes = async (req, res) => {
+    try {
+        // console.log(req.user)
+        const shortNotes = await ShortNote.find()
+        .populate({
+          path: 'author', // Populate the 'author' field
+          select: 'username fullName role' // Select fields from 'author'
+        });
+        // console.log(shortNotes)
+        res.status(200).json(shortNotes);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};

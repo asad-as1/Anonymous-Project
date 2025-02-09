@@ -1,0 +1,46 @@
+.note-card {
+  margin: 1.5rem 0;
+  padding: 1.5rem;
+  background-color: #ffffff;
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+  border-radius: 12px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.note-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+}
+
+.note-title {
+  font-weight: 700;
+  color: #333;
+  font-size: 1.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.note-content {
+  color: #666;
+  font-size: 1rem;
+  margin-bottom: 1.25rem;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.note-file-button {
+  display: inline-block;
+  text-decoration: none;
+  text-transform: none;
+  background-color: #007bff;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background-color 0.3s ease, transform 0.2s;
+}
+
+.note-file-button:hover {
+  background-color: #0056b3;
+  transform: translateY(-2px);
+}

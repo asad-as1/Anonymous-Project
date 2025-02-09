@@ -4,7 +4,8 @@ const User = require('../models/User');
 // Create a new short note
 exports.createShortNote = async (req, res) => {
     try {
-        const { title, shortNote, fileUrl } = req.body;
+        const { title, shortNote, fileUrl } = req.body.noteData;
+        // console.log(req.body)
         const author = req.user.id; 
 
         if (!shortNote && !fileUrl) {
@@ -32,6 +33,7 @@ exports.createShortNote = async (req, res) => {
 // Get all short notes of the logged-in user
 exports.getAllShortNotes = async (req, res) => {
     try {
+        // console.log(req.user)
         const shortNotes = await ShortNote.find({ author: req.user.id });
         res.status(200).json(shortNotes);
     } catch (error) {
@@ -42,7 +44,8 @@ exports.getAllShortNotes = async (req, res) => {
 // Get a single short note by ID
 exports.getShortNoteById = async (req, res) => {
     try {
-        const shortNote = await ShortNote.findById(req.params.id).populate('author', 'name email');
+        // console.log(req.body)
+        const shortNote = await ShortNote.findById(req.params.id);
         if (!shortNote) return res.status(404).json({ message: 'Short note not found' });
         res.status(200).json(shortNote);
     } catch (error) {
@@ -53,7 +56,9 @@ exports.getShortNoteById = async (req, res) => {
 // Update a short note
 exports.updateShortNote = async (req, res) => {
     try {
-        const { title, shortNote, fileUrl } = req.body;
+        const { title, shortNote, fileUrl } = req.body.updatedNoteData;
+        // console.log(title, shortNote, fileUrl)
+
         if (!shortNote && !fileUrl) {
             return res.status(400).json({ message: 'Either shortNote or fileUrl must be provided' });
         }
@@ -72,6 +77,7 @@ exports.updateShortNote = async (req, res) => {
 // Delete a short note
 exports.deleteShortNote = async (req, res) => {
     try {
+        // console.log(req.body)
         const deletedShortNote = await ShortNote.findByIdAndDelete(req.params.id);
         if (!deletedShortNote) return res.status(404).json({ message: 'Short note not found' });
 

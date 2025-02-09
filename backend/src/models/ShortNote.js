@@ -1,3 +1,5 @@
+const mongoose = require('mongoose');
+
 const shortNoteSchema = new mongoose.Schema({
     title: {
       type: String,

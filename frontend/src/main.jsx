@@ -12,7 +12,9 @@ import SignUp from "./pages/SignUp/SignUp.jsx";
 import TakeATest from "./pages/Take A Test/TakeATest.jsx";
 import Summarization from "./pages/Summarization/Summarization.jsx";
 import Login from "./pages/Login/Login.jsx";
-import ProtectedRoute from './components/ProtectedRoute.jsx';  
+import ProtectedRoute from './components/ProtectedRoute.jsx'; 
+import MyNotes from './pages/MyNotes/MyNotes.jsx' 
+import SingleNote from './pages/SingleNote/SingleNote.jsx' 
 
 const router = createBrowserRouter([
   {
@@ -30,6 +32,14 @@ const router = createBrowserRouter([
       {
         path: '/signup',
         element: <SignUp />, 
+      },
+      {
+        path: '/mynotes',
+        element: <ProtectedRoute element={<MyNotes />} />,  
+      },
+      {
+        path: '/mynotes/:id',
+        element: <ProtectedRoute element={<SingleNote />} />,  
       },
       {
         path: '/textreader',

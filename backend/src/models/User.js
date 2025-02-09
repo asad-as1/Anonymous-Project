@@ -34,34 +34,22 @@ const UserSchema = new mongoose.Schema({
     enum: ['user', 'admin'],
     default: 'user',
   },
-  posts: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Post',
-    },
-  ],
   notes: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Note',
     },
   ],
-  uploadedFiles: [
+  shortNotes: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'UploadFile',
+      ref: 'ShortNote',
     },
   ],
-  tasks: [
+  events: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Task',
-    },
-  ],
-  timetables: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'TimeTable',
+      ref: 'Event',
     },
   ],
   questions: [

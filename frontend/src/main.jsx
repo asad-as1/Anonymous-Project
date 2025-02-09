@@ -15,6 +15,7 @@ import Login from "./pages/Login/Login.jsx";
 import ProtectedRoute from './components/ProtectedRoute.jsx'; 
 import MyNotes from './pages/MyNotes/MyNotes.jsx' 
 import SingleNote from './pages/SingleNote/SingleNote.jsx' 
+import Event from './pages/Event/Event.jsx'
 
 const router = createBrowserRouter([
   {
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
       {
         path: '/mynotes',
         element: <ProtectedRoute element={<MyNotes />} />,  
+      },
+      {
+        path: '/schedule',
+        element: <ProtectedRoute element={<Event />} />,  
       },
       {
         path: '/mynotes/:id',

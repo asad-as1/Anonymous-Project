@@ -1,5 +1,9 @@
 .notes-page-container {
   padding: 2rem;
+  background-color: whitesmoke;
+  width: 80%;
+  margin: 50px auto;
+  border-radius: 40px;
 }
 
 .add-note-button-container {

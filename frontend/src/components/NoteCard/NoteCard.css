@@ -1,10 +1,12 @@
 .note-card {
   margin: 1.5rem 0;
   padding: 1.5rem;
-  background-color: #ffffff;
+  background-color: #333 !important;
+  /* background-color: rgb(16, 20, 65) !important; */
   box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
-  border-radius: 12px;
+  border-radius: 20px;
   transition: transform 0.2s, box-shadow 0.2s;
+  color: whitesmoke !important;
 }
 
 .note-card:hover {
@@ -14,13 +16,13 @@
 
 .note-title {
   font-weight: 700;
-  color: #333;
+  color: whitesmoke;
   font-size: 1.25rem;
   margin-bottom: 0.75rem;
 }
 
 .note-content {
-  color: #666;
+  /* color: #666; */
   font-size: 1rem;
   margin-bottom: 1.25rem;
   white-space: pre-wrap;

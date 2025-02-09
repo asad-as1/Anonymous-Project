@@ -3,11 +3,10 @@
 .study-notes-container {
     padding: 20px;
     max-width: 1200px;
-    margin: 0 auto;
-    background-color: #10121a; /* Background specific to this container */
-    color: #e4e6eb;
-    border-radius: 10px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    margin: 50px auto;
+    background-color: #f4f5f8; 
+    border-radius: 40px;
+    /* box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4); */
   }
   
   /* Animated Title */
@@ -16,9 +15,9 @@
     margin-bottom: 40px;
     font-size: 2.5rem;
     font-weight: bold;
-    background: linear-gradient(45deg, #4e9bf5, #3ccf91);
-    -webkit-background-clip: text;
     background-clip: text;
+    background: linear-gradient(to right, var(--accent-color), var(--primary-color));
+    -webkit-background-clip: text;
     color: transparent;
     animation: titleGlow 2s ease-in-out infinite alternate;
   }
@@ -46,10 +45,10 @@
     min-width: 250px;
     padding: 15px;
     font-size: 1rem;
-    background-color: #1f2733;
+    /* background-color: #1f2733; */
     border: 2px solid transparent;
     border-radius: 8px;
-    color: #ffffff;
+    /* color: #ffffff; */
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
   }
   

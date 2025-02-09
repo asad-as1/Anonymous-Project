@@ -6,3 +6,7 @@
     --text-light: #f8fafc;
     --text-dark: #1e293b;
   }
+
+  body {
+    background-color: rgb(15, 23, 42);
+  }

@@ -214,7 +214,6 @@ exports.deleteQuestion = async (req, res) => {
   try {
     const { questionId } = req.params;
 
-    // Check if the question exists
     const question = await Question.findById(questionId);
     if (!question) {
       return res.status(404).json({ message: 'Question not found' });

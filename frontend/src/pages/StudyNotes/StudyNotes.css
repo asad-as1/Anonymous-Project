@@ -258,6 +258,65 @@
     transform: translateY(-2px);
   }
 
+  .note-card {
+    background: #f9f9f9;
+    border: 1px solid #e0e0e0;
+    padding: 20px;
+    margin: 10px 0;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
+  }
+  
+  .note-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .note-description {
+    font-size: 14px;
+    color: #555;
+    margin: 8px 0;
+  }
+  
+  .uploaded-by {
+    font-size: 13px;
+    color: #888;
+    margin-bottom: 10px;
+  }
+  
+  .view-note-button {
+    display: inline-block;
+    padding: 8px 14px;
+    background: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    margin-top: 10px;
+  }
+  
+  .view-note-button:hover {
+    background: #0056b3;
+  }
+  
+  .delete-note-button {
+    display: inline-block;
+    padding: 8px 14px;
+    background: #e74c3c;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    margin-left: 10px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .delete-note-button:hover {
+    background: #c0392b;
+  }
+  
+
   
 
   /* Starry Background Animation */

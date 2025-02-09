@@ -3,8 +3,8 @@ const Note = require("../models/Note");
 // Create a new note
 exports.createNote = async (req, res) => {
   try {
-    // console.log(req.body)
-    const { title, description, file } = req.body;
+    const { title, description, file } = req.body.newNote;
+    // console.log(title, description, file)
 
     if (!title || !description || !file) {
       return res.status(400).json({ message: "All fields are required." });
@@ -26,12 +26,42 @@ exports.createNote = async (req, res) => {
 };
 
 // Get all notes
-exports.getNotes = async (req, res) => {
+exports.getAllNotes = async (req, res) => {
   try {
     const notes = await Note.find().populate("author", "username email").sort({ createdAt: -1 });
     res.status(200).json(notes);
   } catch (error) {
     console.error("Error fetching notes:", error);
     res.status(500).json({ message: "Server error. Please try again." });
+  }
+};
+
+exports.deleteNote = async (req, res) => {
+  try {
+    const { noteId } = req.body;
+    // console.log(req.body)
+
+    if (!noteId) {
+      return res.status(400).json({ message: "Note ID are required." });
+    }
+
+
+    const note = await Note.findById(noteId);
+
+    if (!note) {
+      return res.status(404).json({ message: "Note not found." });
+    }
+
+    // Check if the logged-in user is the owner of the note
+    if (note.author.toString() !== req.user.id) {
+      return res.status(403).json({ message: "You are not authorized to delete this note." });
+    }
+
+    await Note.findByIdAndDelete(noteId);
+
+    res.status(200).json({ message: "Note successfully deleted." });
+  } catch (error) {
+    console.error("Error deleting note:", error);
+    res.status(500).json({ message: "An error occurred. Please try again." });
   }
 };

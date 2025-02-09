@@ -1,17 +1,43 @@
-import React, { useState } from "react";
-import axios from "axios"; // Import axios for API calls
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import Swal from "sweetalert2";
 import { upload } from "../../firebase.js";
+import { getStorage, ref, deleteObject } from "firebase/storage";
 import "./StudyNotes.css";
 import Cookie from "cookies-js";
 
 const StudyNotes = () => {
   const [notes, setNotes] = useState([]);
+  const [userProfile, setUserProfile] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [file, setFile] = useState(null);
   const token = Cookie.get("user");
+  const user = Cookie.get("user"); // Assuming user ID is stored in a cookie.
+
+  useEffect(() => {
+    fetchNotes();
+    fetchUserProfile();
+  }, []);
+  
+  const fetchUserProfile = () => {
+    axios
+      .post(`${import.meta.env.VITE_URL}/user/profile`, { token: user })
+      .then((response) => setUserProfile(response.data.user))
+      .catch((error) => console.error('Error fetching user profile:', error));
+  };
+
+  const fetchNotes = async () => {
+    try {
+      const response = await axios.post(`${import.meta.env.VITE_URL}/notes/getAllNotes`, { token });
+      setNotes(response.data);
+    } catch (error) {
+      console.error("Error fetching notes:", error);
+      alert("Failed to load notes.");
+    }
+  };
 
   const handleAddNote = async () => {
     if (!title || !description || !file) {
@@ -21,18 +47,20 @@ const StudyNotes = () => {
 
     try {
       const fileUrl = await upload(file);
-      
+
       const newNote = {
         title,
         description,
         file: fileUrl,
       };
-      
-      const response = await axios.post(`${import.meta.env.VITE_URL}/notes/studynotes`, {newNote, token});
-      console.log(response)
+
+      const response = await axios.post(`${import.meta.env.VITE_URL}/notes/studynotes`, {
+        newNote,
+        token,
+      });
+
       const savedNote = response.data;
 
-      // Update UI with new note
       setNotes([savedNote, ...notes]);
       setTitle("");
       setDescription("");
@@ -42,6 +70,39 @@ const StudyNotes = () => {
       console.error("Error adding note:", error);
       alert("Failed to add note. Please try again.");
     }
+  };
+
+  const handleDeleteNote = async (noteId, fileUrl) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await axios.post(`${import.meta.env.VITE_URL}/notes/deleteNote`, {
+            noteId,
+            token,
+          });
+
+          // Delete file from Firebase
+          const storage = getStorage();
+          const filePath = decodeURIComponent(fileUrl.split("/").pop().split("?")[0]);
+          const storageRef = ref(storage, filePath);
+          await deleteObject(storageRef);
+
+          setNotes(notes.filter((note) => note._id !== noteId));
+          Swal.fire("Deleted!", "Your note and file have been deleted.", "success");
+        } catch (error) {
+          console.error("Error deleting note:", error);
+          Swal.fire("Error", "Failed to delete note. Please try again.", "error");
+        }
+      }
+    });
   };
 
   const filteredNotes = notes.filter(
@@ -54,7 +115,6 @@ const StudyNotes = () => {
     <div className="study-notes-container">
       <h1 className="first">Study Notes Sharing</h1>
 
-      {/* Search Section */}
       <div className="search-section">
         <input
           type="text"
@@ -68,7 +128,6 @@ const StudyNotes = () => {
         </button>
       </div>
 
-      {/* Modal */}
       {showModal && (
         <div className="modal-overlay">
           <div className="modal-content">
@@ -102,16 +161,21 @@ const StudyNotes = () => {
         </div>
       )}
 
-      {/* Notes Display Section */}
       <div className="notes-container">
         {filteredNotes.map((note) => (
           <div key={note._id} className="note-card">
             <h2 className="note-title">{note.title}</h2>
             <p className="note-description">{note.description}</p>
+            <p className="uploaded-by">Uploaded by: {note.author?.username || "Unknown"}</p>
             {note.file && (
               <a href={note.file} target="_blank" rel="noopener noreferrer" className="view-note-button">
                 View Note
               </a>
+            )}
+            {note.author?._id === userProfile?._id && (
+              <button onClick={() => handleDeleteNote(note._id, note.file)} className="delete-note-button">
+                Delete Note
+              </button>
             )}
           </div>
         ))}

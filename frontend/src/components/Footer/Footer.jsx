@@ -17,8 +17,8 @@ const Footer = () => {
           <h3>Quick Links</h3>
           <ul>
             <li><Link to="/">Home</Link></li>
-            <li><Link to="/">??</Link></li>
-            <li><Link to="/">??</Link></li>
+            <li><Link to="/takeatest">Take A Test</Link></li>
+            <li><Link to="/studynotes">Study Notes</Link></li>
             <li><Link to="/">Privacy Policy</Link></li>
           </ul>
         </div>
@@ -26,7 +26,7 @@ const Footer = () => {
         <div className="footer-section">
           <h3>Contact Us</h3>
           <ul>
-            <li>Email: info@contactsapp.com</li>
+            <li>Email: info@eduAccessapp.com</li>
             <li>Phone: (555) 123-4567</li>
             <li>Address: 123 App Street</li>
             <li>City, State 12345</li>

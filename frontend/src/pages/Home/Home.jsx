@@ -178,13 +178,13 @@ const Home = () => {
 
 
           <div className="two-divs reverse">
-            <div className="left">
-              <img src={img2} alt="Study Materials" className="image-left" />
-            </div>
-            <div className="right">
+          <div className="right">
               <h3>My Notes</h3>
               <p>The "MyNotes" section of our website offers a personalized space where users can store and organize their own study materials. This feature allows learners to easily save important notes, ideas, and references for future use, creating a customized study resource library.By having a dedicated area for personal notes, users can quickly access their work, track their progress, and stay organized throughout their learning journey. </p>
               <p>This section enhances productivity by keeping everything in one place, making it easier to review and update notes as needed. It’s an essential tool for anyone looking to stay on top of their studies and keep their educational materials readily available.</p>
+          </div>
+            <div className="left">
+              <img src={img2} alt="Study Materials" className="image-left" />
             </div>
           </div>
         </div>

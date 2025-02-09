@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Cookies from "cookies-js";
+import Swal from "sweetalert2";
 import {
   VerticalTimeline,
   VerticalTimelineElement,
@@ -18,13 +19,12 @@ const EventTimeline = () => {
     endTime: "",
     description: "",
   });
-  const [editingEvent, setEditingEvent] = useState(null); // Event being edited
-  const [selectedEvent, setSelectedEvent] = useState(null); // Stores the original event before editing
-  const [open, setOpen] = useState(false); // Dialog state
+  const [editingEvent, setEditingEvent] = useState(null);
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [open, setOpen] = useState(false);
 
   const token = Cookies.get("user");
 
-  // Fetch all events
   const fetchEvents = async () => {
     try {
       const response = await axios.post(
@@ -43,21 +43,31 @@ const EventTimeline = () => {
 
   const isCompleted = (endTime) => new Date(endTime) < new Date();
 
-  // Delete an event
   const handleDelete = async (id) => {
-    try {
-      await axios.post(`${import.meta.env.VITE_URL}/events/delete/${id}`, { token });
-      setEvents(events.filter((event) => event._id !== id));
-    } catch (error) {
-      console.error("Error deleting event:", error);
-      alert("Failed to delete event!");
+    const confirmDelete = await Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to undo this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "Cancel",
+    });
+
+    if (confirmDelete.isConfirmed) {
+      try {
+        await axios.post(`${import.meta.env.VITE_URL}/events/delete/${id}`, { token });
+        setEvents(events.filter((event) => event._id !== id));
+        Swal.fire("Deleted!", "The event has been deleted.", "success");
+      } catch (error) {
+        console.error("Error deleting event:", error);
+        Swal.fire("Error!", "Failed to delete event.", "error");
+      }
     }
   };
 
-  // Add a new event
   const handleAddEvent = async () => {
     if (!newEvent.title || !newEvent.startTime || !newEvent.endTime) {
-      alert("Please fill in all required fields!");
+      Swal.fire("Warning!", "Please fill in all required fields!", "warning");
       return;
     }
 
@@ -68,45 +78,33 @@ const EventTimeline = () => {
       });
       await fetchEvents();
       setNewEvent({ title: "", startTime: "", endTime: "", description: "" });
-      alert("Event added successfully!");
+      Swal.fire("Success!", "Event added successfully!", "success");
     } catch (error) {
       console.error("Error adding event:", error);
-      alert("Failed to add event. Please try again.");
+      Swal.fire("Error!", "Failed to add event. Please try again.", "error");
     }
   };
 
-  // Open update dialog with selected event
   const handleEditEvent = (event) => {
     setEditingEvent(event);
-    setSelectedEvent(event); // Store original event data
+    setSelectedEvent(event);
     setOpen(true);
   };
 
-  // Update an existing event
   const handleUpdateEvent = async () => {
     if (!editingEvent || !editingEvent.title.trim() || !editingEvent.description.trim()) {
-      alert("Title or Description cannot be empty!");
+      Swal.fire("Warning!", "Title or Description cannot be empty!", "warning");
       return;
     }
 
     const updatedFields = {};
-
-    // Only include fields that have been modified
-    if (editingEvent.title !== selectedEvent?.title) {
-      updatedFields.title = editingEvent.title;
-    }
-    if (editingEvent.description !== selectedEvent?.description) {
-      updatedFields.description = editingEvent.description;
-    }
-    if (editingEvent.startTime !== selectedEvent?.startTime) {
-      updatedFields.startTime = editingEvent.startTime;
-    }
-    if (editingEvent.endTime !== selectedEvent?.endTime) {
-      updatedFields.endTime = editingEvent.endTime;
-    }
+    if (editingEvent.title !== selectedEvent?.title) updatedFields.title = editingEvent.title;
+    if (editingEvent.description !== selectedEvent?.description) updatedFields.description = editingEvent.description;
+    if (editingEvent.startTime !== selectedEvent?.startTime) updatedFields.startTime = editingEvent.startTime;
+    if (editingEvent.endTime !== selectedEvent?.endTime) updatedFields.endTime = editingEvent.endTime;
 
     if (Object.keys(updatedFields).length === 0) {
-      alert("No changes detected!");
+      Swal.fire("Info!", "No changes detected!", "info");
       return;
     }
 
@@ -116,19 +114,19 @@ const EventTimeline = () => {
         token,
       });
 
-      await fetchEvents(); // Refresh events after update
+      await fetchEvents();
       setOpen(false);
-      alert("Event updated successfully!");
+      Swal.fire("Success!", "Event updated successfully!", "success");
     } catch (error) {
       console.error("Error updating event:", error);
-      alert("Failed to update event. Please try again.");
+      Swal.fire("Error!", "Failed to update event. Please try again.", "error");
     }
   };
 
   return (
     <div className="timeline-container">
       <h2 className="timeline-title">📅 Event Timeline</h2>
-
+  
       <div className="add-event-form">
         <TextField
           label="Title"
@@ -140,11 +138,9 @@ const EventTimeline = () => {
         />
         <TextField
           label="Start Time"
-          type="datetime-local"
+          type="date"
           value={newEvent.startTime}
-          onChange={(e) =>
-            setNewEvent({ ...newEvent, startTime: e.target.value })
-          }
+          onChange={(e) => setNewEvent({ ...newEvent, startTime: e.target.value })}
           fullWidth
           required
           margin="dense"
@@ -152,11 +148,9 @@ const EventTimeline = () => {
         />
         <TextField
           label="End Time"
-          type="datetime-local"
+          type="date"
           value={newEvent.endTime}
-          onChange={(e) =>
-            setNewEvent({ ...newEvent, endTime: e.target.value })
-          }
+          onChange={(e) => setNewEvent({ ...newEvent, endTime: e.target.value })}
           fullWidth
           required
           margin="dense"
@@ -165,13 +159,12 @@ const EventTimeline = () => {
         <TextField
           label="Description"
           value={newEvent.description}
-          onChange={(e) =>
-            setNewEvent({ ...newEvent, description: e.target.value })
-          }
+          onChange={(e) => setNewEvent({ ...newEvent, description: e.target.value })}
           fullWidth
           multiline
           rows={2}
           margin="dense"
+          required
         />
         <Button
           variant="contained"
@@ -183,26 +176,30 @@ const EventTimeline = () => {
           Add Event
         </Button>
       </div>
-
+  
       <VerticalTimeline>
         {events?.map((event) => (
           <VerticalTimelineElement
             key={event._id}
-            date={`${new Date(event.startTime).toLocaleDateString()} - ${new Date(event.endTime).toLocaleDateString()}`}
+            date={`${new Date(event.startTime).toLocaleDateString('en-GB', {
+              day: 'numeric',
+              month: 'numeric',
+              year: 'numeric',
+            })} - ${new Date(event.endTime).toLocaleDateString('en-GB', {
+              day: 'numeric',
+              month: 'numeric',
+              year: 'numeric',
+            })}`}
             iconStyle={{
-              background: isCompleted(event.endTime) ? "green" : "blue",
-              color: "#fff",
+              background: isCompleted(event.endTime) ? 'green' : 'blue',
+              color: '#fff',
             }}
             className="timeline-element"
           >
             <h3 className="event-title">{event.title}</h3>
             <p className="event-description">{event.description}</p>
-            <p
-              className={`status ${
-                isCompleted(event.endTime) ? "completed" : "in-progress"
-              }`}
-            >
-              {isCompleted(event.endTime) ? "✅ Completed" : "⏳ In Progress"}
+            <p className={`status ${isCompleted(event.endTime) ? 'completed' : 'in-progress'}`}>
+              {isCompleted(event.endTime) ? '✅ Completed' : '⏳ In Progress'}
             </p>
             <div className="button-group">
               <Button
@@ -227,22 +224,22 @@ const EventTimeline = () => {
           </VerticalTimelineElement>
         ))}
       </VerticalTimeline>
-
+  
       {/* Update Event Dialog */}
       <Dialog open={open} onClose={() => setOpen(false)}>
         <DialogTitle>Update Event</DialogTitle>
         <DialogContent>
           <TextField
             label="Title"
-            value={editingEvent?.title || ""}
+            value={editingEvent?.title || ''}
             onChange={(e) => setEditingEvent({ ...editingEvent, title: e.target.value })}
             fullWidth
             margin="dense"
           />
           <TextField
             label="Start Time"
-            type="datetime-local"
-            value={editingEvent?.startTime || ""}
+            type="date"
+            value={editingEvent?.startTime || ''}
             onChange={(e) => setEditingEvent({ ...editingEvent, startTime: e.target.value })}
             fullWidth
             margin="dense"
@@ -250,8 +247,8 @@ const EventTimeline = () => {
           />
           <TextField
             label="End Time"
-            type="datetime-local"
-            value={editingEvent?.endTime || ""}
+            type="date"
+            value={editingEvent?.endTime || ''}
             onChange={(e) => setEditingEvent({ ...editingEvent, endTime: e.target.value })}
             fullWidth
             margin="dense"
@@ -259,7 +256,7 @@ const EventTimeline = () => {
           />
           <TextField
             label="Description"
-            value={editingEvent?.description || ""}
+            value={editingEvent?.description || ''}
             onChange={(e) => setEditingEvent({ ...editingEvent, description: e.target.value })}
             fullWidth
             multiline
@@ -268,12 +265,17 @@ const EventTimeline = () => {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpen(false)} color="secondary">Cancel</Button>
-          <Button onClick={handleUpdateEvent} color="primary" startIcon={<Save />}>Update</Button>
+          <Button onClick={() => setOpen(false)} color="secondary">
+            Cancel
+          </Button>
+          <Button onClick={handleUpdateEvent} color="primary" startIcon={<Save />}>
+            Update
+          </Button>
         </DialogActions>
       </Dialog>
     </div>
   );
+  
 };
 
 export default EventTimeline;

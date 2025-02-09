@@ -3,7 +3,7 @@ const User = require("../models/User");
 
 exports.addEvent = async (req, res) => {
   try {
-    console.log(req.body)
+    // console.log(req.body)
     const { title, startTime, endTime, description } = req.body;
     const userId = req?.user?.id;
 

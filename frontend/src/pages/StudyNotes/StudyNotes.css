@@ -3,11 +3,12 @@
 .study-notes-container {
     padding: 20px;
     max-width: 1200px;
-    margin: 0 auto;
+    /* margin: 0 auto; */
     background-color: #10121a; /* Background specific to this container */
     color: #e4e6eb;
     border-radius: 10px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    margin: 50px auto;
   }
   
   /* Animated Title */
@@ -282,7 +283,7 @@
   
   .uploaded-by {
     font-size: 13px;
-    color: #888;
+    color: #0a0909;
     margin-bottom: 10px;
   }
   

@@ -44,3 +44,8 @@
   background-color: #0056b3;
   transform: translateY(-2px);
 }
+
+.view-f{
+  display: flex;
+  justify-content: end;
+}

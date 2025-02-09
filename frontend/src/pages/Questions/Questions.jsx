@@ -167,7 +167,7 @@ const Questions = () => {
           ) : (
             <>
               <h1 className="question-title">{question.title}</h1>
-              <p className="question-details-text">{question.details}</p>
+              <p className="question-details-text">Question: {question.details}</p>
               {userProfile && (
                 <p className="user-profile-text">
                   Asked by: {question.user.fullName} ({question.user.username})
@@ -188,56 +188,58 @@ const Questions = () => {
           {question.answers && question.answers.length > 0 ? (
             <div className="answers-section">
               <h2>Answers</h2>
-              {question.answers.map((answer) => (
-                <div key={answer._id} className="answer-card">
-                  {editingAnswerId === answer._id ? (
-                    <div className="update-answer-card">
-                      <textarea
-                        value={updatedAnswerText}
-                        onChange={(e) => setUpdatedAnswerText(e.target.value)}
-                        className="update-answer-input"
-                      />
-                      <div className="update-answer-actions">
-                        <button
-                          className="submit-button"
-                          onClick={() => handleSubmitUpdatedAnswer(answer._id)}
-                        >
-                          Save
-                        </button>
-                        <button
-                          className="cancel-button"
-                          onClick={() => setEditingAnswerId(null)}
-                        >
-                          Cancel
-                        </button>
-                      </div>
-                    </div>
-                  ) : (
-                    <>
-                      <p>{answer.text}</p>
-                      {(answer.user._id === userProfile?._id || userProfile?.role === 'admin') && (
-                        <div className="answer-actions">
+              <div className="answers-container">
+                {question.answers.map((answer, index) => (
+                  <div key={answer._id} className="answer-card">
+                    {editingAnswerId === answer._id ? (
+                      <div className="update-answer-card">
+                        <textarea
+                          value={updatedAnswerText}
+                          onChange={(e) => setUpdatedAnswerText(e.target.value)}
+                          className="update-answer-input"
+                        />
+                        <div className="update-answer-actions">
                           <button
-                            className="update-button"
-                            onClick={() => handleUpdateAnswer(answer._id, answer.text)}
+                            className="submit-button"
+                            onClick={() => handleSubmitUpdatedAnswer(answer._id)}
                           >
-                            Update Answer
+                            Save
                           </button>
                           <button
-                            className="delete-button"
-                            onClick={() => handleDeleteAnswer(answer._id)}
+                            className="cancel-button"
+                            onClick={() => setEditingAnswerId(null)}
                           >
-                            Delete Answer
+                            Cancel
                           </button>
                         </div>
-                      )}
-                    </>
-                  )}
-                </div>
-              ))}
+                      </div>
+                    ) : (
+                      <>
+                        <p>{`${answer.text}`}</p>
+                        {(answer.user._id === userProfile?._id || userProfile?.role === 'admin') && (
+                          <div className="answer-actions">
+                            <button
+                              className="update-button"
+                              onClick={() => handleUpdateAnswer(answer._id, answer.text)}
+                            >
+                              Update Answer
+                            </button>
+                            <button
+                              className="delete-button"
+                              onClick={() => handleDeleteAnswer(answer._id)}
+                            >
+                              Delete Answer
+                            </button>
+                          </div>
+                        )}
+                      </>
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
           ) : (
-            <p>No answers yet.</p>
+            <p className='no-ans'>No answers yet.</p>
           )}
           <div className="answer-form">
             <textarea

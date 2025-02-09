@@ -219,7 +219,7 @@
   }
   
   .note-card {
-    background-color: #2c333d;
+    background-color: white;
     border-radius: 12px;
     padding: 20px;
     transition: transform 0.2s ease, box-shadow 0.3s ease;

@@ -5,6 +5,7 @@ import axios from 'axios';
 import { upload } from '../../firebase.js';
 import Cookies from 'cookies-js';
 import NoteCard from '../../components/NoteCard/NoteCard.jsx';
+import Swal from 'sweetalert2';  // Import SweetAlert2
 import './MyNotes.css';
 
 const NotesPage = () => {
@@ -71,7 +72,11 @@ const NotesPage = () => {
     if (selectedFile && !["audio/mpeg", "video/mp4"].includes(selectedFile.type)) {
       setFile(selectedFile);
     } else {
-      alert('Invalid file type. Please select a valid file (no MP3 or MP4).');
+      Swal.fire({
+        icon: 'error',
+        title: 'Invalid file type',
+        text: 'Please select a valid file (no MP3 or MP4).',
+      });
     }
   };
 
@@ -79,12 +84,20 @@ const NotesPage = () => {
     e.preventDefault();
 
     if (!title) {
-      alert('Title is required.');
+      Swal.fire({
+        icon: 'warning',
+        title: 'Title is required',
+        text: 'Please provide a title for the note.',
+      });
       return;
     }
 
     if (!textContent && !file) {
-      alert('Please provide either text content or a file.');
+      Swal.fire({
+        icon: 'warning',
+        title: 'Content or file required',
+        text: 'Please provide either text content or a file.',
+      });
       return;
     }
 
@@ -100,7 +113,11 @@ const NotesPage = () => {
 
     try {
       await axios.post(`${import.meta.env.VITE_URL}/mynotes/note`, { token, noteData });
-      alert('Note saved successfully!');
+      Swal.fire({
+        icon: 'success',
+        title: 'Note saved successfully!',
+        text: 'Your note has been saved.',
+      });
       setShowForm(false);
       setTitle('');
       setTextContent('');
@@ -108,7 +125,11 @@ const NotesPage = () => {
       fetchNotes();
     } catch (error) {
       console.error('Error saving note:', error);
-      alert('Failed to save the note.');
+      Swal.fire({
+        icon: 'error',
+        title: 'Failed to save note',
+        text: 'There was an error saving your note. Please try again.',
+      });
     }
   };
 

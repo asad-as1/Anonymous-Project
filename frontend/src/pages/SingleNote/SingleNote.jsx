@@ -120,7 +120,7 @@ const SingleNote = () => {
       {note ? (
         <>
           <Typography variant="h5" className="note-title">
-            {note.title}
+            <p>Title: {note.title}</p>
           </Typography>
           {note.fileUrl && (
             <iframe

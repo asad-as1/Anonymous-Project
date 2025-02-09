@@ -192,13 +192,13 @@ const StudyNotes = () => {
             <h2>Share Your Note</h2>
             <input
               type="text"
-              placeholder="Title"
+              placeholder="Title *"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               className="input-field"
             />
             <textarea
-              placeholder="Description"
+              placeholder="Description *"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               className="textarea-field"

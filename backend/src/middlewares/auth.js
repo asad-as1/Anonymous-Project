@@ -19,7 +19,7 @@ const authenticate = async (req, res, next) => {
       return res.status(401).json({ message: 'Unauthorized2' });
     }
     
-    req.user = { email: user.email, id: user.id};
+    req.user = { id: user.id, role: user.role};
 
     next();
   } catch (error) {

@@ -118,7 +118,7 @@ exports.deleteAnswer = async (req, res) => {
     }
     
     
-    if (answer.user.toString() !== user._id.toString()) {
+    if (answer.user.toString() !== user._id.toString() && req.user.role !== "admin") {
       return res.status(403).json({ message: 'You can only delete your own answers' });
     }
     
@@ -144,19 +144,16 @@ exports.deleteAnswer = async (req, res) => {
   }
 };
 
-
 exports.updateAnswer = async (req, res) => {
   try {
     const { id, answerId } = req.params;
-    const { text, token } = req.body;
+    const { text } = req.body;
     // console.log(req.body)
 
     if (!text || !text.trim()) {
       return res.status(400).json({ message: 'Answer text cannot be empty.' });
     }
-
-    const decoded = jwt.verify(token, process.env.SECRET);
-    const userId = decoded.userId;
+    const userId = req.user.id;
     
     const answer = await Answer.findById(answerId);
     // console.log(answer)
@@ -164,7 +161,7 @@ exports.updateAnswer = async (req, res) => {
       return res.status(404).json({ message: 'Answer not found.' });
     }
 
-    if (answer.user.toString() !== userId) {
+    if (answer.user.toString() !== userId && req.user.role !== "admin") {
       return res.status(403).json({ message: 'You are not authorized to update this answer.' });
     }
 
@@ -180,15 +177,13 @@ exports.updateAnswer = async (req, res) => {
 exports.updateQuestion = async (req, res) => {
   try {
     const { questionId } = req.params;
-    const { title, details, token } = req.body;
+    const { title, details } = req.body;
     // console.log(req.body)
 
     if (!title || !details || !title.trim() || !details.trim()) {
       return res.status(400).json({ message: 'Question details or title cannot be empty.' });
     }
-
-    const decoded = jwt.verify(token, process.env.SECRET);
-    const userId = decoded.userId;
+    const userId = req.user.id;
     
     const question = await Question.findById(questionId);
     if (!question) {
@@ -196,7 +191,7 @@ exports.updateQuestion = async (req, res) => {
     }
     // console.log(question)
     
-    if (question.user.toString() !== userId) {
+    if (question.user.toString() !== userId && req.user.role !== "admin") {
       return res.status(403).json({ message: 'You are not authorized to update this question.' });
     }
 
@@ -217,6 +212,10 @@ exports.deleteQuestion = async (req, res) => {
     const question = await Question.findById(questionId);
     if (!question) {
       return res.status(404).json({ message: 'Question not found' });
+    }
+
+    if (question.user.toString() !== req?.user?.id && req.user.role !== "admin") {
+      return res.status(403).json({ message: 'You are not authorized to update this question.' });
     }
 
     // Fetch related answer IDs before deleting

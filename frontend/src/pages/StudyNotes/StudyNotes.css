@@ -342,28 +342,6 @@
     z-index: -1;
     overflow: hidden;
   }
-
-  .upload-progress-bar-container {
-    width: 100%;
-    background-color: #f3f3f3;
-    border-radius: 10px;
-    overflow: hidden;
-    margin-top: 10px;
-  }
-  
-  .upload-progress-bar {
-    height: 8px;
-    width: 0;
-    background-color: #4caf50;
-    transition: width 0.3s ease;
-  }
-  
-  .upload-progress-text {
-    font-size: 14px;
-    margin-top: 5px;
-    color: #333;
-    text-align: center;
-  }
   
   
   .stars {
@@ -406,4 +384,34 @@
       width: 3px;
       height: 3px;
     }
+  }
+
+  .upload-progress-container {
+    width: 100%;
+    margin-bottom: 16px;
+  }
+  
+  .upload-text {
+    color: #4a4a4a;
+    font-weight: 500;
+  }
+  
+  .upload-time {
+    color: #6c757d;
+  }
+  
+  .progress-bar {
+    width: 100%;
+    background-color: #e0e0e0;
+    border-radius: 8px;
+    height: 8px;
+    margin-top: 8px;
+    overflow: hidden;
+  }
+  
+  .progress-fill {
+    background-color: #007bff;
+    height: 8px;
+    border-radius: 8px;
+    transition: width 0.3s ease-in-out;
   }

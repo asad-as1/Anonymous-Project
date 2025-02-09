@@ -16,6 +16,7 @@ const StudyNotes = () => {
   const [file, setFile] = useState(null);
   const [uploadProgress, setUploadProgress] = useState(null); // Use null instead of 0 initially
   const token = Cookie.get("user");
+  const [uploadTime, setUploadTime] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -139,10 +140,10 @@ const StudyNotes = () => {
     const selectedFile = e.target.files[0];
     if (selectedFile) {
       const extension = selectedFile.name.split(".").pop().toLowerCase();
-      if (["mp3", "mp4"].includes(extension)) {
+      if (["mp3", "mp4", "mkv"].includes(extension)) {
         Swal.fire(
           "Invalid File Type",
-          "Audio (mp3) and video (mp4) files are not allowed.",
+          "Audio and video files are not allowed.",
           "error"
         );
         e.target.value = "";
@@ -207,17 +208,21 @@ const StudyNotes = () => {
               onChange={handleFileChange}
               className="file-input"
             />
-            {uploadProgress !== null && (
-              <div>
-                <div className="upload-progress-bar-container">
+            {/* Upload Progress UI */}
+            {uploadProgress > 0 && (
+              <div className="upload-progress-container">
+                <p className="upload-text">Uploading: {uploadProgress}%</p>
+                {uploadTime && (
+                  <p className="upload-time">
+                    Time taken: {uploadTime} seconds
+                  </p>
+                )}
+                <div className="progress-bar">
                   <div
-                    className="upload-progress-bar"
+                    className="progress-fill"
                     style={{ width: `${uploadProgress}%` }}
-                  ></div>
+                  />
                 </div>
-                <p className="upload-progress-text">
-                  {uploadProgress}% Uploaded
-                </p>
               </div>
             )}
 

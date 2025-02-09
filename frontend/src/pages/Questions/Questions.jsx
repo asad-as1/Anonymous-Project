@@ -173,7 +173,7 @@ const Questions = () => {
                   Asked by: {question.user.fullName} ({question.user.username})
                 </p>
               )}
-              {question.user._id === userProfile._id && (
+              {(question.user._id === userProfile._id || userProfile?.role === 'admin') && (
                 <div className="question-actions">
                   <button className="update-button" onClick={() => setEditingQuestion(true)}>
                     Update Question
@@ -215,7 +215,7 @@ const Questions = () => {
                   ) : (
                     <>
                       <p>{answer.text}</p>
-                      {answer.user._id === userProfile._id && (
+                      {(answer.user._id === userProfile?._id || userProfile?.role === 'admin') && (
                         <div className="answer-actions">
                           <button
                             className="update-button"

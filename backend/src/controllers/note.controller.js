@@ -38,22 +38,18 @@ exports.getAllNotes = async (req, res) => {
 
 exports.deleteNote = async (req, res) => {
   try {
+    // console.log(req.user)
     const { noteId } = req.body;
-    // console.log(req.body)
-
     if (!noteId) {
       return res.status(400).json({ message: "Note ID are required." });
     }
-
-
     const note = await Note.findById(noteId);
-
     if (!note) {
       return res.status(404).json({ message: "Note not found." });
     }
 
     // Check if the logged-in user is the owner of the note
-    if (note.author.toString() !== req.user.id) {
+    if (note.author.toString() !== req.user.id && req.user.role !== "admin") {
       return res.status(403).json({ message: "You are not authorized to delete this note." });
     }
 

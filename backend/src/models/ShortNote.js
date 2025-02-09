@@ -5,11 +5,11 @@ const shortNoteSchema = new mongoose.Schema({
     },
     shortNote: {
       type: String,
-      required: true,
+      required: false,
     },
     fileUrl: {
       type: String, 
-      required: true,
+      required: false,
     },
     author: {
       type: mongoose.Schema.Types.ObjectId,

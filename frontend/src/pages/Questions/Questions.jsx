@@ -11,6 +11,11 @@ const Questions = () => {
   const [question, setQuestion] = useState(null);
   const [newAnswer, setNewAnswer] = useState('');
   const [userProfile, setUserProfile] = useState(null);
+  const [editingAnswerId, setEditingAnswerId] = useState(null);
+  const [updatedAnswerText, setUpdatedAnswerText] = useState('');
+  const [editingQuestion, setEditingQuestion] = useState(false);
+  const [updatedQuestionTitle, setUpdatedQuestionTitle] = useState('');
+  const [updatedQuestionDetails, setUpdatedQuestionDetails] = useState('');
   const user = Cookies.get('user');
 
   useEffect(() => {
@@ -22,9 +27,10 @@ const Questions = () => {
     axios
       .post(`${import.meta.env.VITE_URL}/qna/questions/${id}`, { token: user })
       .then((response) => {
-        // console.log(response.data)
-        setQuestion(response.data)
-    })
+        setQuestion(response.data);
+        setUpdatedQuestionTitle(response.data.title);
+        setUpdatedQuestionDetails(response.data.details);
+      })
       .catch((error) => console.error('Error fetching question:', error));
   };
 
@@ -44,22 +50,32 @@ const Questions = () => {
         token: user,
       })
       .then(() => {
-        Swal.fire({
-          icon: 'success',
-          title: 'Answer submitted successfully!',
-          showConfirmButton: false,
-          timer: 1500,
-        });
+        Swal.fire('Success', 'Answer submitted successfully!', 'success');
         fetchQuestionById();
         setNewAnswer('');
       })
-      .catch((error) => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Error adding answer!',
-          text: error.message,
-        });
-      });
+      .catch(() => Swal.fire('Error', 'Error adding answer!', 'error'));
+  };
+
+  const handleUpdateAnswer = (answerId, currentText) => {
+    setEditingAnswerId(answerId);
+    setUpdatedAnswerText(currentText);
+  };
+
+  const handleSubmitUpdatedAnswer = (answerId) => {
+    if (!updatedAnswerText.trim()) return;
+
+    axios
+      .put(`${import.meta.env.VITE_URL}/qna/questions/${id}/answer/${answerId}`, {
+        text: updatedAnswerText,
+        token: user,
+      })
+      .then(() => {
+        Swal.fire('Updated!', 'Your answer has been updated.', 'success');
+        fetchQuestionById();
+        setEditingAnswerId(null);
+      })
+      .catch(() => Swal.fire('Error!', 'Unable to update the answer.', 'error'));
   };
 
   const handleDeleteQuestion = () => {
@@ -72,20 +88,14 @@ const Questions = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         axios
-          .delete(`${import.meta.env.VITE_URL}/qna/questions/${id}`, { data: { token: user } })
+          .post(`${import.meta.env.VITE_URL}/qna/deletequestion/${id}`, {token: user })
           .then(() => {
             Swal.fire('Deleted!', 'The question has been deleted.', 'success');
             navigate('/');
           })
-          .catch((error) => {
-            Swal.fire('Error!', 'Unable to delete the question.', 'error');
-          });
+          .catch(() => Swal.fire('Error!', 'Unable to delete the question.', 'error'));
       }
     });
-  };
-
-  const handleUpdateQuestion = () => {
-    navigate(`/update-question/${id}`);
   };
 
   const handleDeleteAnswer = (answerId) => {
@@ -98,66 +108,130 @@ const Questions = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         axios
-          .delete(`${import.meta.env.VITE_URL}/qna/questions/${id}/answer/${answerId}`, {
-            data: { token: user },
+          .post(`${import.meta.env.VITE_URL}/qna/questions/${id}/answer/${answerId}`, {
+            token: user,
           })
           .then(() => {
             Swal.fire('Deleted!', 'Your answer has been deleted.', 'success');
             fetchQuestionById();
           })
-          .catch((error) => {
-            Swal.fire('Error!', 'Unable to delete the answer.', 'error');
-          });
+          .catch(() => Swal.fire('Error!', 'Unable to delete the answer.', 'error'));
       }
     });
   };
 
-  const handleUpdateAnswer = (answerId) => {
-    navigate(`/update-answer/${answerId}`);
+  const handleSubmitUpdatedQuestion = () => {
+    if (!updatedQuestionTitle.trim() || !updatedQuestionDetails.trim()) return;
+
+    axios
+      .put(`${import.meta.env.VITE_URL}/qna/questions/${id}`, {
+        title: updatedQuestionTitle,
+        details: updatedQuestionDetails,
+        token: user,
+      })
+      .then(() => {
+        Swal.fire('Success', 'Question updated successfully!', 'success');
+        setEditingQuestion(false);
+        fetchQuestionById();
+      })
+      .catch(() => Swal.fire('Error!', 'Unable to update the question.', 'error'));
   };
 
   return (
     <div className="question-details-container">
       {question ? (
         <div className="question-details">
-          <h1 className="question-title">{question.title}</h1>
-          <p className="question-details-text">{question.details}</p>
-          {userProfile && (
-            <p className="user-profile-text">
-              Asked by: {question.user.fullName} ({question.user.username})
-            </p>
-          )}
-          {question.user._id === userProfile._id && (
-            <div className="question-actions">
-              <button onClick={handleUpdateQuestion} className="update-button">
-                Update Question
-              </button>
-              <button onClick={handleDeleteQuestion} className="delete-button">
-                Delete Question
-              </button>
+          {editingQuestion ? (
+            <div className="update-question-card">
+              <h2>Update Question</h2>
+              <input
+                type="text"
+                value={updatedQuestionTitle}
+                onChange={(e) => setUpdatedQuestionTitle(e.target.value)}
+                className="update-question-title"
+              />
+              <textarea
+                value={updatedQuestionDetails}
+                onChange={(e) => setUpdatedQuestionDetails(e.target.value)}
+                className="update-question-details"
+              />
+              <div className="update-question-actions">
+                <button className="submit-button" onClick={handleSubmitUpdatedQuestion}>
+                  Save
+                </button>
+                <button className="cancel-button" onClick={() => setEditingQuestion(false)}>
+                  Cancel
+                </button>
+              </div>
             </div>
+          ) : (
+            <>
+              <h1 className="question-title">{question.title}</h1>
+              <p className="question-details-text">{question.details}</p>
+              {userProfile && (
+                <p className="user-profile-text">
+                  Asked by: {question.user.fullName} ({question.user.username})
+                </p>
+              )}
+              {question.user._id === userProfile._id && (
+                <div className="question-actions">
+                  <button className="update-button" onClick={() => setEditingQuestion(true)}>
+                    Update Question
+                  </button>
+                  <button className="delete-button" onClick={handleDeleteQuestion}>
+                    Delete Question
+                  </button>
+                </div>
+              )}
+            </>
           )}
           {question.answers && question.answers.length > 0 ? (
             <div className="answers-section">
               <h2>Answers</h2>
-              {question.answers.map((answer, index) => (
-                <div key={index} className="answer-card">
-                  {answer.text}
-                  {answer.user._id === userProfile._id && (
-                    <div className="answer-actions">
-                      <button
-                        className="update-button"
-                        onClick={() => handleUpdateAnswer(answer._id)}
-                      >
-                        Update Answer
-                      </button>
-                      <button
-                        className="delete-button"
-                        onClick={() => handleDeleteAnswer(answer._id)}
-                      >
-                        Delete Answer
-                      </button>
+              {question.answers.map((answer) => (
+                <div key={answer._id} className="answer-card">
+                  {editingAnswerId === answer._id ? (
+                    <div className="update-answer-card">
+                      <textarea
+                        value={updatedAnswerText}
+                        onChange={(e) => setUpdatedAnswerText(e.target.value)}
+                        className="update-answer-input"
+                      />
+                      <div className="update-answer-actions">
+                        <button
+                          className="submit-button"
+                          onClick={() => handleSubmitUpdatedAnswer(answer._id)}
+                        >
+                          Save
+                        </button>
+                        <button
+                          className="cancel-button"
+                          onClick={() => setEditingAnswerId(null)}
+                        >
+                          Cancel
+                        </button>
+                      </div>
                     </div>
+                  ) : (
+                    <>
+                      <p>{answer.text}</p>
+                      {answer.user._id === userProfile._id && (
+                        <div className="answer-actions">
+                          <button
+                            className="update-button"
+                            onClick={() => handleUpdateAnswer(answer._id, answer.text)}
+                          >
+                            Update Answer
+                          </button>
+                          <button
+                            className="delete-button"
+                            onClick={() => handleDeleteAnswer(answer._id)}
+                          >
+                            Delete Answer
+                          </button>
+                        </div>
+                      )}
+                    </>
                   )}
                 </div>
               ))}

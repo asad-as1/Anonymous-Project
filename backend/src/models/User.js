@@ -64,6 +64,18 @@ const UserSchema = new mongoose.Schema({
       ref: 'TimeTable',
     },
   ],
+  questions: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Question',
+    },
+  ],
+  answers: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Answer',
+    },
+  ],
   createdAt: {
     type: Date,
     default: Date.now,

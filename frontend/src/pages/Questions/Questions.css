@@ -105,3 +105,110 @@
     margin-top: 5px;
   }
   
+
+  .update-answer-card {
+    background: #f9f9f9;
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 10px;
+  }
+  
+  .update-answer-input {
+    width: 100%;
+    height: 60px;
+    margin-bottom: 10px;
+  }
+  
+  .update-answer-actions {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .cancel-button {
+    background-color: #f44336;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+  }
+  
+  .submit-button {
+    background-color: #4caf50;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .answer-card {
+    background: #ffffff;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 8px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+
+
+  .update-question-card {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: 20px auto;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  .update-question-card h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #333;
+  }
+  
+  .update-question-card label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 8px;
+  }
+  
+  .update-question-card textarea,
+  .update-question-card input[type='text'] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    font-size: 14px;
+  }
+  
+  .update-question-card textarea {
+    resize: vertical;
+    min-height: 100px;
+  }
+  
+  .update-question-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+  
+  .update-question-actions button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  
+  .update-question-actions button.cancel-button {
+    background-color: #ff4d4d;
+  }
+  
+  .update-question-actions button:hover {
+    opacity: 0.85;
+  }
+  

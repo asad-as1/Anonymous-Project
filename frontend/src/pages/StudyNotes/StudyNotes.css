@@ -342,6 +342,29 @@
     z-index: -1;
     overflow: hidden;
   }
+
+  .upload-progress-bar-container {
+    width: 100%;
+    background-color: #f3f3f3;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 10px;
+  }
+  
+  .upload-progress-bar {
+    height: 8px;
+    width: 0;
+    background-color: #4caf50;
+    transition: width 0.3s ease;
+  }
+  
+  .upload-progress-text {
+    font-size: 14px;
+    margin-top: 5px;
+    color: #333;
+    text-align: center;
+  }
+  
   
   .stars {
     position: absolute;

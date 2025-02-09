@@ -14,7 +14,7 @@ exports.createNote = async (req, res) => {
       title,
       description,
       file,
-      author: req.user.id, 
+      author: req?.user?.id, 
     });
 
     await newNote.save();

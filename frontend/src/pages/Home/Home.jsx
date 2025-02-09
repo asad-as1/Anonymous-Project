@@ -49,11 +49,11 @@ const Home = () => {
   return (
     <div className="home-container">
       {/* Animated Background */}
-      <div className="animated-bg">
+      {/* <div className="animated-bg">
         {[...Array(20)].map((_, i) => (
           <div key={i} className="particle"></div>
         ))}
-      </div>
+      </div> */}
 
       {/* Hero Section */}
       <section className="hero-section">
@@ -75,7 +75,7 @@ const Home = () => {
       </section>
 
       <div className="oneone">
-        <img src= {img0} alt="Document Reader" className="one" />
+        <img src= {img2} alt="Document Reader" className="one" />
         </div>
 
       {/* Features Section */}
@@ -184,7 +184,7 @@ const Home = () => {
               <p>This section enhances productivity by keeping everything in one place, making it easier to review and update notes as needed. It’s an essential tool for anyone looking to stay on top of their studies and keep their educational materials readily available.</p>
           </div>
             <div className="left">
-              <img src={img2} alt="Study Materials" className="image-left" />
+              <img src={img0} alt="Study Materials" className="image-left" />
             </div>
           </div>
         </div>

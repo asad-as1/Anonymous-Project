@@ -1,77 +1,157 @@
 .text-summarizer-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background-color: #f4f4f4;
-    font-family: Arial, sans-serif;
-  }
-  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f4f4f4;
+  font-family: Arial, sans-serif;
+}
+
+.summarizer-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  width: 90%;
+  max-width: 1200px;
+  background-color: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.input-section, .summary-section {
+  display: flex;
+  flex-direction: column;
+}
+
+h2 {
+  margin-bottom: 15px;
+  color: #333;
+  font-size: 1.5rem;
+}
+
+.input-textarea, .summary-textarea {
+  width: 100%;
+  min-height: 400px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  resize: none;
+  font-size: 1rem;
+}
+
+.summary-textarea {
+  background-color: #f9f9f9;
+  overflow-y: auto;
+}
+
+.summarize-button {
+  margin-top: 15px;
+  padding: 12px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.summarize-button:hover {
+  background-color: #45a049;
+}
+
+.summarize-button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.error-message {
+  color: red;
+  margin-top: 10px;
+  font-size: 0.9rem;
+}
+
+.loading-text, .placeholder-text {
+  color: #888;
+  text-align: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
   .summarizer-wrapper {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    width: 90%;
-    max-width: 1200px;
-    background-color: white;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    grid-template-columns: 1fr; /* Stack input and summary sections vertically */
+    padding: 20px;
   }
-  
-  .input-section, .summary-section {
-    display: flex;
-    flex-direction: column;
-  }
-  
+
   h2 {
-    margin-bottom: 15px;
-    color: #333;
-    font-size: 1.5rem;
+    font-size: 1.25rem; /* Slightly smaller font size for smaller screens */
   }
-  
+
   .input-textarea, .summary-textarea {
-    width: 100%;
-    min-height: 400px;
-    padding: 15px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    resize: none;
-    font-size: 1rem;
+    min-height: 300px; /* Reduced height for smaller screens */
+    font-size: 0.95rem; /* Slightly smaller font size */
   }
-  
-  .summary-textarea {
-    background-color: #f9f9f9;
-    overflow-y: auto;
-  }
-  
+
   .summarize-button {
-    margin-top: 15px;
-    padding: 12px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+    font-size: 1rem; /* Slightly smaller button text */
+    padding: 10px; /* Adjusted button padding */
   }
-  
-  .summarize-button:hover {
-    background-color: #45a049;
+}
+
+@media (max-width: 640px) {
+  .summarizer-wrapper {
+    grid-template-columns: 1fr; /* Stack input and summary sections */
+    padding: 15px;
   }
-  
-  .summarize-button:disabled {
-    background-color: #cccccc;
-    cursor: not-allowed;
+
+  .input-textarea, .summary-textarea {
+    min-height: 250px; /* Further reduced height for small screens */
+    font-size: 0.9rem; /* Smaller font size */
   }
-  
+
+  .summarize-button {
+    font-size: 1rem; /* Button font size */
+    padding: 10px; /* Button padding */
+  }
+
+  h2 {
+    font-size: 1.125rem; /* Slightly smaller title font */
+  }
+
   .error-message {
-    color: red;
-    margin-top: 10px;
-    font-size: 0.9rem;
+    font-size: 0.85rem; /* Smaller error message text */
   }
-  
+}
+
+@media (max-width: 480px) {
+  .text-summarizer-container {
+    padding: 10px; /* Padding on small screens */
+  }
+
+  .summarizer-wrapper {
+    grid-template-columns: 1fr; /* Stack input and summary sections */
+    padding: 15px;
+  }
+
+  .input-textarea, .summary-textarea {
+    min-height: 200px; /* Even smaller height */
+    font-size: 0.85rem; /* Further reduced font size */
+  }
+
+  .summarize-button {
+    padding: 8px; /* Smaller button padding */
+    font-size: 0.875rem; /* Smaller button font */
+  }
+
+  h2 {
+    font-size: 1rem; /* Smaller title font */
+  }
+
+  .error-message {
+    font-size: 0.8rem; /* Smaller error message font */
+  }
+
   .loading-text, .placeholder-text {
-    color: #888;
-    text-align: center;
+    font-size: 0.85rem; /* Slightly smaller loading text */
   }
+}

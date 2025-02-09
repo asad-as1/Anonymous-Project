@@ -13,7 +13,7 @@ const NoteCard = ({ id, title, shortNote, fileUrl }) => {
         <Typography variant="body1" className="note-content">
           {shortNote}
         </Typography>
-        
+        <div className="view-f">
           <Link
             className="note-file-button"
             to={`/mynotes/${id}`}
@@ -21,7 +21,7 @@ const NoteCard = ({ id, title, shortNote, fileUrl }) => {
           >
             View File
           </Link>
-        
+          </div>
       </CardContent>
     </Card>
   );

@@ -91,7 +91,7 @@ const Questions = () => {
           .post(`${import.meta.env.VITE_URL}/qna/deletequestion/${id}`, {token: user })
           .then(() => {
             Swal.fire('Deleted!', 'The question has been deleted.', 'success');
-            navigate('/');
+            navigate('/queandans');
           })
           .catch(() => Swal.fire('Error!', 'Unable to delete the question.', 'error'));
       }

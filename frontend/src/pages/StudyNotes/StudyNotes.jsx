@@ -3,8 +3,20 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { upload } from "../../firebase.js";
 import { getStorage, ref, deleteObject } from "firebase/storage";
-import "./StudyNotes.css";
 import Cookie from "cookies-js";
+import { Link } from "react-router-dom";
+import {
+  Search,
+  Plus,
+  Share2,
+  X,
+  Upload,
+  FileText,
+  Trash2,
+  User,
+  ExternalLink,
+} from "lucide-react";
+import "./StudyNotes.css";
 
 const StudyNotes = () => {
   const [notes, setNotes] = useState([]);
@@ -14,9 +26,8 @@ const StudyNotes = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [file, setFile] = useState(null);
-  const [uploadProgress, setUploadProgress] = useState(null); // Use null instead of 0 initially
+  const [uploadProgress, setUploadProgress] = useState(null);
   const token = Cookie.get("user");
-  const [uploadTime, setUploadTime] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -48,7 +59,6 @@ const StudyNotes = () => {
         `${import.meta.env.VITE_URL}/notes/getAllNotes`,
         { token }
       );
-      // console.log(response.data)
       setNotes(response.data);
     } catch (error) {
       console.error("Error fetching notes:", error);
@@ -71,16 +81,11 @@ const StudyNotes = () => {
       );
 
       const newNote = { title, description, file: fileUrl };
-      const response = await axios.post(
-        `${import.meta.env.VITE_URL}/notes/studynotes`,
-        {
-          newNote,
-          token,
-        }
-      );
-      // console.log(response)
+      await axios.post(`${import.meta.env.VITE_URL}/notes/studynotes`, {
+        newNote,
+        token,
+      });
 
-      // setNotes([response.data, ...notes]);
       fetchNotes();
       setTitle("");
       setDescription("");
@@ -162,104 +167,120 @@ const StudyNotes = () => {
 
   return (
     <div className="study-notes-container">
-      <h1 className="first">Study Notes Sharing</h1>
+      <h1 className="page-title">Study Notes Sharing</h1>
 
       <div className="search-section">
-        <input
-          type="text"
-          placeholder="Search notes..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="search-bar"
-        />
-        <button
-          onClick={() => setShowModal(true)}
-          className="share-notes-button"
-        >
-          Share Notes
+        <div className="search-wrapper">
+          <Search className="search-icon" size={20} />
+          <input
+            type="text"
+            placeholder="Search notes..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="search-input"
+          />
+        </div>
+        <button onClick={() => setShowModal(true)} className="add-note-btn">
+          <Plus size={20} />
+          <span>Share Notes</span>
         </button>
       </div>
 
       {showModal && (
         <div className="modal-overlay">
-          <div className="modal-content">
-            <button
-              className="close-modal-button"
-              onClick={() => setShowModal(false)}
-            >
-              &times;
-            </button>
-            <h2>Share Your Note</h2>
-            <input
-              type="text"
-              placeholder="Title *"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              className="input-field"
-            />
-            <textarea
-              placeholder="Description *"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              className="textarea-field"
-            />
-            <input
-              type="file"
-              onChange={handleFileChange}
-              className="file-input"
-            />
-            {/* Upload Progress UI */}
-            {uploadProgress > 0 && (
-              <div className="upload-progress-container">
-                <p className="upload-text">Uploading: {uploadProgress}%</p>
-                {uploadTime && (
-                  <p className="upload-time">
-                    Time taken: {uploadTime} seconds
-                  </p>
-                )}
-                <div className="progress-bar">
-                  <div
-                    className="progress-fill"
-                    style={{ width: `${uploadProgress}%` }}
-                  />
-                </div>
+          <div className="modal">
+            <div className="modal-header">
+              <div className="modal-title">
+                <Share2 size={24} />
+                <h2>Share Your Note</h2>
               </div>
-            )}
+              <button className="close-btn" onClick={() => setShowModal(false)}>
+                <X size={24} />
+              </button>
+            </div>
+            <div className="modal-body">
+              <input
+                type="text"
+                placeholder="Title *"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                className="input-field"
+              />
+              <textarea
+                placeholder="Description *"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                className="textarea-field"
+              />
+              <div className="file-upload">
+                <label htmlFor="file-input" className="file-label">
+                  <input
+                    type="file"
+                    onChange={handleFileChange}
+                    id="file-input"
+                    className="file-input"
+                    style={{ display: "none" }} // Hide the default input
+                  />
+                  <Upload size={20} />
+                  {file ? file.name : "Choose File"}
+                </label>
+              </div>
 
-            <button onClick={handleAddNote} className="submit-note-button">
-              Submit Note
-            </button>
+              {uploadProgress !== null && (
+                <div className="progress-container">
+                  <div className="progress-bar">
+                    <div
+                      className="progress"
+                      style={{ width: `${uploadProgress}%` }}
+                    ></div>
+                  </div>
+                  <span className="progress-text">{uploadProgress}%</span>
+                </div>
+              )}
+
+              <button onClick={handleAddNote} className="submit-btn">
+                <FileText size={20} />
+                Submit Note
+              </button>
+            </div>
           </div>
         </div>
       )}
 
-      <div className="notes-container">
+      <div className="notes-grid">
         {filteredNotes.map((note) => (
           <div key={note._id} className="note-card">
-            <h2 className="note-title">{note.title}</h2>
-            <p className="note-description">{note.description}</p>
-            <p className="uploaded-by">
-              Uploaded by: {note?.author?.username || "Unknown"}
-            </p>
-            {note.file && (
-              <a
-                href={note.file}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="view-note-button"
-              >
-                View Note
-              </a>
-            )}
-            {(note.author?._id === userProfile?._id ||
-              userProfile?.role === "admin") && (
-              <button
-                onClick={() => handleDeleteNote(note._id, note.file)}
-                className="delete-note-button"
-              >
-                Delete Note
-              </button>
-            )}
+            <div className="note-content">
+              <h3 className="note-title">{note.title}</h3>
+              <p className="note-description">{note.description}</p>
+              <p className="note-author">
+                <User size={16} />
+                <span>By {note?.author?.username || "Unknown"}</span>
+              </p>
+            </div>
+            <div className="note-actions">
+              {note.file && (
+                <Link
+                  to={note.file}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="view-btn"
+                >
+                  <ExternalLink size={18} />
+                  View
+                </Link>
+              )}
+              {(note.author?._id === userProfile?._id ||
+                userProfile?.role === "admin") && (
+                <button
+                  onClick={() => handleDeleteNote(note._id, note.file)}
+                  className="delete-btn"
+                >
+                  <Trash2 size={18} />
+                  Delete
+                </button>
+              )}
+            </div>
           </div>
         ))}
       </div>

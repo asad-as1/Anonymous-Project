@@ -1,7 +1,9 @@
 /* Main container styles */
 .question-details-container {
   padding: clamp(1rem, 5vw, 2rem);
-  background-color: #f8fafc;
+  /* background-color: #f8fafc; */
+  background-color: rgb(15, 23, 42) !important;
+  padding-top: 50px !important;
   min-height: 100vh;
 }
 

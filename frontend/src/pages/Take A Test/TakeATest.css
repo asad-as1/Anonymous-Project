@@ -359,3 +359,13 @@
     padding: 1rem 2rem;
   }
 }
+
+.side-nt{
+  color: #fff;
+  margin-bottom: 40px;
+  /* height: auto;
+  width: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center; */
+}

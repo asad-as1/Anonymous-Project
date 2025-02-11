@@ -134,7 +134,8 @@ const NotesPage = () => {
   };
 
   return (
-    <div className="notes-page-container">
+    <div className='div-top'>
+      <div className="notes-page-container">
       <div className="add-note-button-container">
         <Button variant="contained" onClick={() => setShowForm(true)} startIcon={<AiOutlinePlus />}>
           Add Note
@@ -186,6 +187,8 @@ const NotesPage = () => {
         ))}
       </div>
     </div>
+    </div>
+    
   );
 };
 

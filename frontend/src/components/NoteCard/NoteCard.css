@@ -1,53 +1,86 @@
-.note-card {
-  margin: 1.5rem 0;
+.note-card-container {
+  background-color: white;
+  border-radius: 1rem;
   padding: 1.5rem;
-  background-color: #333 !important;
-  /* background-color: rgb(16, 20, 65) !important; */
-  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
-  border-radius: 20px;
-  transition: transform 0.2s, box-shadow 0.2s;
-  color: whitesmoke !important;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out;
 }
 
-.note-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+.note-card-container:hover {
+  transform: translateY(-0.5rem);
 }
 
-.note-title {
-  font-weight: 700;
-  color: whitesmoke;
-  font-size: 1.25rem;
-  margin-bottom: 0.75rem;
-}
-
-.note-content {
-  /* color: #666; */
-  font-size: 1rem;
-  margin-bottom: 1.25rem;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-}
-
-.note-file-button {
-  display: inline-block;
-  text-decoration: none;
-  text-transform: none;
-  background-color: #007bff;
-  color: white;
-  padding: 0.6rem 1.2rem;
-  border-radius: 6px;
-  font-size: 0.9rem;
-  font-weight: 500;
-  transition: background-color 0.3s ease, transform 0.2s;
-}
-
-.note-file-button:hover {
-  background-color: #0056b3;
-  transform: translateY(-2px);
-}
-
-.view-f{
+.note-card-header {
   display: flex;
-  justify-content: end;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.note-card-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: #3b82f6; /* Blue color */
+}
+
+.note-card-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1f2937; /* Dark gray */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Truncate after 2 lines */
+  -webkit-box-orient: vertical;
+}
+
+.note-card-short-note {
+  color: #4b5563; /* Medium gray */
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Truncate after 2 lines */
+  -webkit-box-orient: vertical;
+}
+
+.note-card-author-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+  color: #6b7280; /* Light gray */
+}
+
+.note-card-author-detail {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.note-card-icon-small {
+  width: 1rem;
+  height: 1rem;
+}
+
+.note-card-view-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: #3b82f6; /* Blue color */
+  color: white;
+  border-radius: 0.75rem;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+}
+
+.note-card-view-button:hover {
+  background-color: #2563eb; /* Darker blue */
+}
+
+.note-card-view-button .note-card-icon-small {
+  width: 1rem;
+  height: 1rem;
 }

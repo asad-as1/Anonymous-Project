@@ -1,7 +1,7 @@
 /* Main container styles */
 .qna-container {
   padding: clamp(1rem, 5vw, 2rem);
-  background-color: #f8fafc;
+  background-color: rgb(15, 23, 42);
   min-height: 100vh;
 }
 
@@ -19,7 +19,7 @@
 
 .questions-header h1 {
   font-size: clamp(2rem, 5vw, 2.5rem);
-  color: #1a2b3c;
+  color: white;
   font-weight: 600;
 }
 
@@ -42,20 +42,23 @@
 .questions-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 1.5rem;
+  gap: 2rem;
 }
 
 .question-card {
   background-color: white;
   padding: 1.25rem; /* Slightly reduce the padding */
   border-radius: 0.75rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
   transition: transform 0.2s, box-shadow 0.2s;
   height: 220px; /* Reduced height for the card */
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   overflow: hidden;
+  box-shadow: 
+    10px 10px 15px rgba(22, 19, 19, 0),  /* Shadow to the right and bottom */
+    -10px -10px 15px rgba(43, 243, 183, 0.7);
 }
 
 .view-btn {

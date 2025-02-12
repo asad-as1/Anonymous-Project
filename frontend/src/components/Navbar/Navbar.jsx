@@ -88,7 +88,7 @@ const Navbar = () => {
         <Link to="/textreader">Text Reader</Link>
         <Link to="/mynotes">MyNotes</Link>
         <Link to="/summarization">Summarization</Link>
-        <Link to="/queandans">Q&A</Link>
+        <Link to="/queandans">Ques & Ans</Link>
         {isAuthenticated ? (
           <>
             <button onClick={handleLogout} className="logout-btn">Logout</button>

@@ -1,29 +1,25 @@
-/* Base Styles */
-
-
-  .image-section {
-    margin-top: 50px;
-    padding: 0 20px; /* Add padding to prevent touching the screen edges */
+.image-section {
+  margin-top: 50px;
+  padding: 0 20px; 
 }
-
 
 .two-divs-container {
     display: flex;
     flex-direction: column;
-    gap: 40px; /* Space between the two blocks */
-    padding: 0 20px; /* Additional padding for the container */
+    gap: 40px; 
+    padding: 0 20px; 
 }
 
 .two-divs {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 20px; /* Add gap between image and text */
-    flex: 1 1 50%; /* Ensures equal width for both sections */
+    gap: 20px; 
+    flex: 1 1 50%; 
 }
 
 .two-divs.reverse {
-    flex-direction: row-reverse; /* This reverses the order of the image and text */
+    flex-direction: row-reverse; 
 }
 
 .left, .right {
@@ -249,6 +245,7 @@
   .feature-description {
     color: rgba(255, 255, 255, 0.8);
     line-height: 1.6;
+    font-size: 20px !important;
   }
   
   .carousel-indicators {
@@ -443,7 +440,7 @@
   }
   
   .right p {
-    font-size: 16px;
+    font-size: 20px !important;
   }
   
   

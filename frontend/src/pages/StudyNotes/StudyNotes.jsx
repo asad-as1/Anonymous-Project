@@ -207,7 +207,8 @@ const StudyNotes = () => {
                 className="input-field"
               />
               <textarea
-                placeholder="Description *"
+                placeholder="Description *
+Description should be of 20 words."
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 className="textarea-field"

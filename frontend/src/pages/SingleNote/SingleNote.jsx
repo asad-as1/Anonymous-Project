@@ -185,7 +185,7 @@ const SingleNote = () => {
                 <input
                   type="file"
                   onChange={(e) => setNewFile(e.target.files[0])}
-                  accept=".pdf,.docx,.txt,.jpg,.jpeg,.png"
+                  accept=".pdf,.docx,.txt,.jpg,.jpeg,.png,.xlsx"
                   style={{ marginBottom: "1rem", display: "block" }}
                 />
 

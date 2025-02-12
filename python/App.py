@@ -1,3 +1,4 @@
+import os
 from flask import Flask
 from flask_cors import CORS
 from TakeATest import take_a_test_bp
@@ -13,4 +14,5 @@ app.register_blueprint(take_a_test_bp)
 app.register_blueprint(summarization_bp)
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    port = int(os.environ.get("PORT", 5000))  # Use PORT from Render or default to 5000
+    app.run(host="0.0.0.0", port=port)

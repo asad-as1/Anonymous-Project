@@ -19,6 +19,7 @@ import {
 } from "firebase/storage";
 import { upload } from "../../firebase.js";
 import "./SingleNote.css";
+import NotFound from "../Not Found/NotFound.jsx";
 
 const SingleNote = () => {
   const { id } = useParams();
@@ -28,6 +29,7 @@ const SingleNote = () => {
   const navigate = useNavigate();
   const token = Cookies.get("user");
   const storage = getStorage();
+  const [errorMessage, setErrorMessage] = useState(""); // New error message state
 
   useEffect(() => {
     const fetchNote = async () => {
@@ -38,12 +40,14 @@ const SingleNote = () => {
         );
         setNote(response.data);
       } catch (error) {
-        console.error("Error fetching the note:", error);
-        Swal.fire("Error", "Failed to load the note.", "error");
+        // console.error("Error fetching the note:", error);
+        // Swal.fire("Error", "Failed to load the note.", "error");
+        setErrorMessage(error); 
+
       }
     };
     fetchNote();
-  }, [id, token]);
+  }, [id, token, errorMessage]);
 
   const deleteFileFromFirebase = async (fileUrl) => {
     if (!fileUrl) return;
@@ -116,95 +120,100 @@ const SingleNote = () => {
   };
 
   return (
-    <div className="single-note-containers">
-      {note ? (
-        <>
-          <Typography variant="h5" className="notes-titles">
-            <p>Title: {note.title}</p>
-          </Typography>
-          {note.fileUrl && (
-            <iframe
-              src={note.fileUrl}
-              title="Note File"
-              className="note-iframe"
-              frameBorder="0"
-            />
-          )}
-          {note.shortNote && note.fileUrl ? (
-            <p>Short Note: {note.shortNote}</p>
-          ) : (
-            <div className="note-text-contents">
-              <p>{note.shortNote}</p>
+    errorMessage ? (
+      <NotFound message={errorMessage} />
+    ) : (
+      <div className="single-note-containers">
+        {note ? (
+          <>
+            <Typography variant="h5" className="notes-titles">
+              <p>Title: {note.title}</p>
+            </Typography>
+            {note.fileUrl && (
+              <iframe
+                src={note.fileUrl}
+                title="Note File"
+                className="note-iframe"
+                frameBorder="0"
+              />
+            )}
+            {note.shortNote && note.fileUrl ? (
+              <p>Short Note: {note.shortNote}</p>
+            ) : (
+              <div className="note-text-contents">
+                <p>{note.shortNote}</p>
+              </div>
+            )}
+  
+            <div className="note-actions">
+              <Button
+                className="del-bt"
+                variant="outlined"
+                color="primary"
+                onClick={() => setShowUpdateForm(!showUpdateForm)}
+              >
+                {showUpdateForm ? "Cancel Update" : "Update Note"}
+              </Button>
+              <Button
+                className="del-bt"
+                variant="contained"
+                color="secondary"
+                onClick={handleDelete}
+              >
+                Delete Note
+              </Button>
             </div>
-          )}
-
-          <div className="note-actions">
-            <Button
-              className="del-bt"
-              variant="outlined"
-              color="primary"
-              onClick={() => setShowUpdateForm(!showUpdateForm)}
-            >
-              {showUpdateForm ? "Cancel Update" : "Update Note"}
-            </Button>
-            <Button
-              className="del-bt"
-              variant="contained"
-              color="secondary"
-              onClick={handleDelete}
-            >
-              Delete Note
-            </Button>
-          </div>
-
-          {showUpdateForm && (
-            <Card className="note-card">
-              <CardContent>
-                <Typography variant="h6">Edit Note</Typography>
-
-                <TextField
-                  label="Title"
-                  fullWidth
-                  margin="normal"
-                  value={note.title}
-                  onChange={(e) => setNote({ ...note, title: e.target.value })}
-                />
-
-                <TextField
-                  label="Short Note"
-                  multiline
-                  rows={4}
-                  fullWidth
-                  margin="normal"
-                  value={note.shortNote}
-                  onChange={(e) =>
-                    setNote({ ...note, shortNote: e.target.value })
-                  }
-                />
-
-                <input
-                  type="file"
-                  onChange={(e) => setNewFile(e.target.files[0])}
-                  accept=".pdf,.docx,.txt,.jpg,.jpeg,.png"
-                  style={{ marginBottom: "1rem", display: "block" }}
-                />
-
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={handleUpdate}
-                >
-                  Save Changes
-                </Button>
-              </CardContent>
-            </Card>
-          )}
-        </>
-      ) : (
-        <p>Loading note...</p>
-      )}
-    </div>
+  
+            {showUpdateForm && (
+              <Card className="note-card">
+                <CardContent>
+                  <Typography variant="h6">Edit Note</Typography>
+  
+                  <TextField
+                    label="Title"
+                    fullWidth
+                    margin="normal"
+                    value={note.title}
+                    onChange={(e) => setNote({ ...note, title: e.target.value })}
+                  />
+  
+                  <TextField
+                    label="Short Note"
+                    multiline
+                    rows={4}
+                    fullWidth
+                    margin="normal"
+                    value={note.shortNote}
+                    onChange={(e) =>
+                      setNote({ ...note, shortNote: e.target.value })
+                    }
+                  />
+  
+                  <input
+                    type="file"
+                    onChange={(e) => setNewFile(e.target.files[0])}
+                    accept=".pdf,.docx,.txt,.jpg,.jpeg,.png"
+                    style={{ marginBottom: "1rem", display: "block" }}
+                  />
+  
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleUpdate}
+                  >
+                    Save Changes
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
+          </>
+        ) : (
+          <p>Loading note...</p>
+        )}
+      </div>
+    )
   );
+  
 };
 
 export default SingleNote;

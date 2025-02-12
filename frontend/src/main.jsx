@@ -16,6 +16,7 @@ import ProtectedRoute from './components/ProtectedRoute.jsx';
 import MyNotes from './pages/MyNotes/MyNotes.jsx' 
 import SingleNote from './pages/SingleNote/SingleNote.jsx' 
 import Event from './pages/Event/Event.jsx'
+import NotFound from './pages/Not Found/NotFound.jsx';
 
 const router = createBrowserRouter([
   {
@@ -70,6 +71,10 @@ const router = createBrowserRouter([
         path: '/summarization',
         element: <ProtectedRoute element={<Summarization />} />,
       },
+      {
+        path: "*",
+        element: <NotFound />,
+      }
     ],
   },
 ]);

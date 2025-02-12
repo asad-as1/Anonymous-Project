@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Cookies from 'cookies-js';
 import Swal from 'sweetalert2';
+import {User} from "lucide-react"
 import './Questions.css';
 
 const Questions = () => {
@@ -28,6 +29,7 @@ const Questions = () => {
       .post(`${import.meta.env.VITE_URL}/qna/questions/${id}`, { token: user })
       .then((response) => {
         setQuestion(response.data);
+        console.log(response)
         setUpdatedQuestionTitle(response.data.title);
         setUpdatedQuestionDetails(response.data.details);
       })
@@ -137,127 +139,138 @@ const Questions = () => {
       .catch(() => Swal.fire('Error!', 'Unable to update the question.', 'error'));
   };
 
-  return (
-    <div className="question-details-container">
-      {question ? (
-        <div className="question-details">
-          {editingQuestion ? (
-            <div className="update-question-card">
-              <h2>Update Question</h2>
-              <input
-                type="text"
-                value={updatedQuestionTitle}
-                onChange={(e) => setUpdatedQuestionTitle(e.target.value)}
-                className="update-question-title"
-              />
-              <textarea
-                value={updatedQuestionDetails}
-                onChange={(e) => setUpdatedQuestionDetails(e.target.value)}
-                className="update-question-details"
-              />
-              <div className="update-question-actions">
-                <button className="submit-button" onClick={handleSubmitUpdatedQuestion}>
-                  Save
+return (
+  <div className="question-details-container">
+    {question ? (
+      <div className="question-details">
+        {editingQuestion ? (
+          <div className="update-question-card">
+            <h2>Update Question</h2>
+            <input
+              type="text"
+              value={updatedQuestionTitle}
+              onChange={(e) => setUpdatedQuestionTitle(e.target.value)}
+              className="update-question-title"
+            />
+            <textarea
+              value={updatedQuestionDetails}
+              onChange={(e) => setUpdatedQuestionDetails(e.target.value)}
+              className="update-question-details"
+            />
+            <div className="update-question-actions">
+              <button className="submit-button" onClick={handleSubmitUpdatedQuestion}>
+                Save
+              </button>
+              <button className="cancel-button" onClick={() => setEditingQuestion(false)}>
+                Cancel
+              </button>
+            </div>
+          </div>
+        ) : (
+          <>
+            <h1 className="question-title">{question.title}</h1>
+            <p className="question-details-text">Question: {question.details}</p>
+
+            {userProfile && (
+              <p className="user-profile-text">
+                <User size={18} className="user-icon" />{" "}
+                Asked by: {question.user.fullName} ({question.user.username})
+              </p>
+            )}
+
+            {(question.user._id === userProfile._id || userProfile?.role === "admin") && (
+              <div className="question-actions">
+                <button className="update-button" onClick={() => setEditingQuestion(true)}>
+                  Update Question
                 </button>
-                <button className="cancel-button" onClick={() => setEditingQuestion(false)}>
-                  Cancel
+                <button className="delete-button" onClick={handleDeleteQuestion}>
+                  Delete Question
                 </button>
               </div>
-            </div>
-          ) : (
-            <>
-              <h1 className="question-title">{question.title}</h1>
-              <p className="question-details-text">Question: {question.details}</p>
-              {userProfile && (
-                <p className="user-profile-text">
-                  Asked by: {question.user.fullName} ({question.user.username})
-                </p>
-              )}
-              {(question.user._id === userProfile._id || userProfile?.role === 'admin') && (
-                <div className="question-actions">
-                  <button className="update-button" onClick={() => setEditingQuestion(true)}>
-                    Update Question
-                  </button>
-                  <button className="delete-button" onClick={handleDeleteQuestion}>
-                    Delete Question
-                  </button>
-                </div>
-              )}
-            </>
-          )}
-          {question.answers && question.answers.length > 0 ? (
-            <div className="answers-section">
-              <h2>Answers</h2>
-              <div className="answers-container">
-                {question.answers.map((answer, index) => (
-                  <div key={answer._id} className="answer-card">
-                    {editingAnswerId === answer._id ? (
-                      <div className="update-answer-card">
-                        <textarea
-                          value={updatedAnswerText}
-                          onChange={(e) => setUpdatedAnswerText(e.target.value)}
-                          className="update-answer-input"
-                        />
-                        <div className="update-answer-actions">
+            )}
+          </>
+        )}
+
+        {question.answers && question.answers.length > 0 ? (
+          <div className="answers-section">
+            <h2>Answers</h2>
+            <div className="answers-container">
+              {question.answers.map((answer) => (
+                <div key={answer._id} className="answer-card">
+                  {editingAnswerId === answer._id ? (
+                    <div className="update-answer-card">
+                      <textarea
+                        value={updatedAnswerText}
+                        onChange={(e) => setUpdatedAnswerText(e.target.value)}
+                        className="update-answer-input"
+                      />
+                      <div className="update-answer-actions">
+                        <button
+                          className="submit-button"
+                          onClick={() => handleSubmitUpdatedAnswer(answer._id)}
+                        >
+                          Save
+                        </button>
+                        <button
+                          className="cancel-button"
+                          onClick={() => setEditingAnswerId(null)}
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      <p className="answer-text">{answer.text}</p>
+                      <span className="answer-user">
+                        <User size={16} className="user-icon" />{" "}
+                        {answer.user?.fullName} ({answer.user?.username})
+                      </span>
+
+                      {(answer.user._id === userProfile?._id || userProfile?.role === "admin") && (
+                        <div className="answer-actions">
                           <button
-                            className="submit-button"
-                            onClick={() => handleSubmitUpdatedAnswer(answer._id)}
+                            className="update-button"
+                            onClick={() => handleUpdateAnswer(answer._id, answer.text)}
                           >
-                            Save
+                            Update Answer
                           </button>
                           <button
-                            className="cancel-button"
-                            onClick={() => setEditingAnswerId(null)}
+                            className="delete-button"
+                            onClick={() => handleDeleteAnswer(answer._id)}
                           >
-                            Cancel
+                            Delete Answer
                           </button>
                         </div>
-                      </div>
-                    ) : (
-                      <>
-                        <p>{`${answer.text}`}</p>
-                        {(answer.user._id === userProfile?._id || userProfile?.role === 'admin') && (
-                          <div className="answer-actions">
-                            <button
-                              className="update-button"
-                              onClick={() => handleUpdateAnswer(answer._id, answer.text)}
-                            >
-                              Update Answer
-                            </button>
-                            <button
-                              className="delete-button"
-                              onClick={() => handleDeleteAnswer(answer._id)}
-                            >
-                              Delete Answer
-                            </button>
-                          </div>
-                        )}
-                      </>
-                    )}
-                  </div>
-                ))}
-              </div>
+                      )}
+                    </>
+                  )}
+                </div>
+              ))}
             </div>
-          ) : (
-            <p className='no-ans'>No answers yet.</p>
-          )}
-          <div className="answer-form">
-            <textarea
-              placeholder="Write your answer here..."
-              value={newAnswer}
-              onChange={(e) => setNewAnswer(e.target.value)}
-              className="answer-input"
-            />
-            <button onClick={handleAnswerSubmit} className="submit-button">
-              Submit Answer
-            </button>
           </div>
+        ) : (
+          <p className="no-ans">No answers yet.</p>
+        )}
+
+        <div className="answer-form">
+          <textarea
+            placeholder="Write your answer here..."
+            value={newAnswer}
+            onChange={(e) => setNewAnswer(e.target.value)}
+            className="answer-input"
+          />
+          <button onClick={handleAnswerSubmit} className="submit-button">
+            Submit Answer
+          </button>
         </div>
-      ) : (
-        <p>Loading question...</p>
-      )}
-    </div>
-  );
+      </div>
+    ) : (
+      <p>Loading question...</p>
+    )}
+  </div>
+);
+
 };
 
 export default Questions;

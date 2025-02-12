@@ -252,7 +252,9 @@ const StudyNotes = () => {
           <div key={note._id} className="note-card">
             <div className="note-content">
               <div className="sameme">
+                <div className="">
               <FileText className="note-card-icon" />
+              </div>
               <h3 className="note-title">{note.title}</h3>
               </div>
               <p className="note-description">{note.description}</p>

@@ -8,7 +8,9 @@ const NoteCard = ({ id, title, shortNote, author, role }) => {
     <div className="note-card-container">
       {/* Header */}
       <div className="note-card-header">
+        <div className="">
         <FileText className="note-card-icon" />
+        </div>
         <h3 className="note-card-title">{title}</h3>
       </div>
 

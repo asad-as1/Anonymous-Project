@@ -251,7 +251,10 @@ const StudyNotes = () => {
         {filteredNotes.map((note) => (
           <div key={note._id} className="note-card">
             <div className="note-content">
+              <div className="sameme">
+              <FileText className="note-card-icon" />
               <h3 className="note-title">{note.title}</h3>
+              </div>
               <p className="note-description">{note.description}</p>
               <p className="note-author">
                 <User size={16} />

@@ -1,7 +1,7 @@
 .single-note-container {
   width: 1100px !important;
   margin: 2rem auto;
-  padding: 2rem;
+  padding: 2rem !important;
   background-color: #f9f9f9;
   border-radius: 12px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -70,4 +70,88 @@
   display: flex;
   justify-content: space-between;
   margin-top: 1rem;
+}
+
+
+/* Media Queries */
+@media screen and (max-width: 768px) {
+  .single-note-container {
+    width: 95% !important;
+    padding: 0.8rem;
+    margin-top: 80px;
+  }
+
+  .note-iframe {
+    height: 400px !important;
+  }
+
+  .note-text-content {
+    max-height: 300px;
+  }
+
+  .note-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .note-actions button {
+    width: 100%;
+    margin: 0.5rem 0;
+  }
+
+  .note-card {
+    padding: 1rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .single-note-container {
+    width: 100% !important;
+    padding: 0.5rem;
+    margin-top: 60px;
+    border-radius: 8px;
+  }
+
+  .del-bt {
+    width: 200px !important;
+    /* margin: 0.5rem 0; */
+  }
+  .note-actions{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .note-iframe {
+    height: 300px !important;
+  }
+
+  .note-text-content {
+    max-height: 250px;
+    padding: 0.8rem;
+  }
+
+  .note-title {
+    width: 90%;
+    font-size: 1.2rem;
+  }
+}
+
+/* Print styles */
+@media print {
+  .single-note-container {
+    box-shadow: none;
+    margin: 0;
+    padding: 1cm;
+  }
+
+  .note-actions,
+  .note-card {
+    display: none;
+  }
+
+  .note-iframe {
+    height: auto !important;
+    page-break-inside: avoid;
+  }
 }

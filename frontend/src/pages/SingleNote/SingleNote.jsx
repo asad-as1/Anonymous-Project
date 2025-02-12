@@ -140,6 +140,7 @@ const SingleNote = () => {
 
           <div className="note-actions">
             <Button
+              className="del-bt"
               variant="outlined"
               color="primary"
               onClick={() => setShowUpdateForm(!showUpdateForm)}
@@ -147,6 +148,7 @@ const SingleNote = () => {
               {showUpdateForm ? "Cancel Update" : "Update Note"}
             </Button>
             <Button
+              className="del-bt"
               variant="contained"
               color="secondary"
               onClick={handleDelete}

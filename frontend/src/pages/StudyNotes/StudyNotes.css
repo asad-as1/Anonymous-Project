@@ -7,6 +7,11 @@
   border-radius: 16px;
 }
 
+.sameme{
+  display: flex;
+  gap: 10px;
+}
+
 .page-title {
   text-align: center;
   margin-bottom: 50px;
@@ -376,7 +381,11 @@
 
 @media (max-width: 480px) {
   .note-actions {
-    flex-direction: column;
+    width: 100% !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* flex-direction: row !important; */
   }
   
   .view-btn,

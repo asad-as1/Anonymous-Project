@@ -1,6 +1,7 @@
 import React from 'react';
 import { FileText, User, UserCircle, ArrowRight } from 'lucide-react';
 import "./NoteCard.css"
+import { Link } from 'react-router-dom';
 
 const NoteCard = ({ id, title, shortNote, author, role }) => {
   return (
@@ -29,10 +30,13 @@ const NoteCard = ({ id, title, shortNote, author, role }) => {
       )}
 
       {/* View Button */}
-      <a href={`/mynotes/${id}`} className="note-card-view-button">
+      <div className="lr">
+
+      <Link to={`/mynotes/${id}`} className="note-card-view-button">
         <span>View File</span>
         <ArrowRight className="note-card-icon-small" />
-      </a>
+      </Link>
+      </div>
     </div>
   );
 };

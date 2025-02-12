@@ -6,6 +6,9 @@
   transition: transform 0.2s ease-in-out;
   display: flex;
   flex-direction: column;
+  width: 100%; /* Added for responsiveness */
+  max-width: 400px; /* Added max-width */
+  margin: 0 auto; /* Center the card */
 }
 
 .note-card-container:hover {
@@ -92,4 +95,61 @@
 .note-card-view-button .note-card-icon-small {
   width: 1rem;
   height: 1rem;
+}
+
+@media (max-width: 768px) {
+  .note-card-container {
+    padding: 1rem;
+    width: 80% !important;
+  }
+
+  .note-card-title {
+    font-size: 1rem;
+    /* overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Truncate after 2 lines */
+    /* -webkit-box-orient: vertical;  */
+  }
+
+  .note-card-short-note {
+    font-size: 0.875rem;
+    margin-bottom: 1rem;
+  }
+
+  .note-card-author-info {
+    font-size: 0.75rem;
+  }
+
+  .note-card-view-button {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .note-card-container {
+    padding: 0.75rem;
+  }
+  .note-card-title {
+    padding: 0.75rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Truncate after 2 lines */
+    -webkit-box-orient: vertical;
+  }
+
+  .note-card-header {
+    margin-bottom: 0.75rem;
+  }
+
+  .note-card-icon {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  .note-card-author-info {
+    gap: 0.125rem;
+  }
 }

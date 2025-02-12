@@ -19,7 +19,7 @@ function Summarization() {
     setSummary("");
 
     try {
-      const response = await axios.post("http://127.0.0.1:5000/summarize", { text: inputText });
+      const response = await axios.post(`${import.meta.env.VITE_PYTHON_URL}/summarize`, { text: inputText });
       
       if (response.data.summary) {
         setSummary(response.data.summary);

@@ -116,10 +116,10 @@ const SingleNote = () => {
   };
 
   return (
-    <div className="single-note-container">
+    <div className="single-note-containers">
       {note ? (
         <>
-          <Typography variant="h5" className="note-title">
+          <Typography variant="h5" className="notes-titles">
             <p>Title: {note.title}</p>
           </Typography>
           {note.fileUrl && (
@@ -133,7 +133,7 @@ const SingleNote = () => {
           {note.shortNote && note.fileUrl ? (
             <p>Short Note: {note.shortNote}</p>
           ) : (
-            <div className="note-text-content">
+            <div className="note-text-contents">
               <p>{note.shortNote}</p>
             </div>
           )}

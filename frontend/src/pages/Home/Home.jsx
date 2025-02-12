@@ -165,7 +165,7 @@ const Home = () => {
           </div>
           <div className="two-divs">
           <div className="right">
-              <h3>Q&A</h3> 
+              <h3>Ques & Ans</h3> 
               <p>The Question and Answer (Q&A) section of our website serves as a dynamic platform for learners to connect, share knowledge, and find solutions. Users can ask questions on any subject, and the community can provide helpful answers, fostering a collaborative learning environment. </p>
               <p>This feature empowers individuals to gain insights from diverse perspectives, encouraging active participation and peer-to-peer learning. Whether you're seeking clarity on a specific topic or sharing your expertise, the Q&A section promotes a supportive, engaging, and accessible educational experience for all.</p>
             </div>

@@ -1,19 +1,14 @@
-# api key = "AIzaSyDUYC19umF7AZYUEHdMTCeTS0qQ5Lcd_eY"
-# model_name = "gemini-1.5-flash"
-
-
 from flask import Flask, request, jsonify
 import google.generativeai as genai
 import os
 from datetime import datetime
 from flask_cors import CORS
 
-
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "https://eduaccess-as2.netlify.app"}})
 
 # Configure Google Gemini API
-GOOGLE_API_KEY = "AIzaSyDUYC19umF7AZYUEHdMTCeTS0qQ5Lcd_eY"
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY", "AIzaSyDUYC19umF7AZYUEHdMTCeTS0qQ5Lcd_eY")
 genai.configure(api_key=GOOGLE_API_KEY)
 model = genai.GenerativeModel('gemini-1.5-flash')
 
@@ -29,6 +24,11 @@ def log_response(endpoint, response):
     print(f"[{timestamp}] Response from {endpoint}")
     print(f"Response: {response}")
 
+@app.route('/', methods=['GET'])
+def home():
+    """Health check route"""
+    return jsonify({"message": "API is running!", "status": "success"}), 200
+
 @app.route('/summarize', methods=['POST'])
 def summarize_text():
     try:
@@ -43,7 +43,6 @@ def summarize_text():
 
         log_request('/summarize', {'text_length': len(text), 'prompt': custom_prompt})
 
-        # Construct the complete prompt
         full_prompt = f"""
         {custom_prompt}
         
@@ -51,7 +50,6 @@ def summarize_text():
         {text}
         """
 
-        # Generate summary using Gemini
         response = model.generate_content(full_prompt)
         summary = response.text
 
@@ -104,12 +102,9 @@ def compare_texts():
         Reasons: [bullet points of specific reasons]
         """
 
-        # Generate comparison using Gemini
         response = model.generate_content(comparison_prompt)
         comparison_result = response.text
 
-        # Parse the response to extract score and analysis
-        # Assuming the model follows the requested format
         lines = comparison_result.split('\n')
         score = None
         analysis = ""
@@ -148,9 +143,12 @@ def compare_texts():
 if __name__ == '__main__':
     if not GOOGLE_API_KEY:
         raise ValueError("Please set the GOOGLE_API_KEY environment variable")
-    
+
+    port = int(os.environ.get("PORT", 10000))  # Use Render's provided port or default to 10000
     print("Starting Flask API server...")
     print("Available endpoints:")
-    print("1. POST /summarize - Text summarization")
-    print("2. POST /compare - Text comparison")
-    app.run(debug=True)
+    print("1. GET / - Health check")
+    print("2. POST /summarize - Text summarization")
+    print("3. POST /compare - Text comparison")
+    
+    app.run(host="0.0.0.0", port=port, debug=True)

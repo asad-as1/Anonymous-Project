@@ -55,12 +55,14 @@ const qaRoutes = require('./src/routes/QnA');
 const noteRouter = require('./src/routes/notes');
 const shortNoteRouter = require('./src/routes/shortNotes');
 const eventRouter = require('./src/routes/event');
+const activityRouter = require('./src/routes/activity');
 
 app.use("/user", userRouter);
 app.use('/qna', qaRoutes);
 app.use("/notes", noteRouter);
 app.use("/mynotes", shortNoteRouter);
 app.use("/events", eventRouter);
+app.use("/activity", activityRouter);
 
 
 

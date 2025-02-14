@@ -3,7 +3,7 @@ import { Navigate, useLocation } from 'react-router-dom';
 import Cookie from 'cookies-js';
 import axios from 'axios';
 
-const ProtectedRoute = ({ element: Component, ...rest }) => {
+const ProtectedRoute = ({ element: Component, userId }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const user = Cookie.get('user'); 
   const BACKEND_URL = import.meta.env.VITE_URL;
@@ -30,7 +30,7 @@ const ProtectedRoute = ({ element: Component, ...rest }) => {
     return <div style={{ textAlign: 'center', margin: '16px', fontSize: '1.25rem' }}>Loading...</div>;
   }
 
-  return isAuthenticated ? Component : <Navigate to="/login" state={{ from: location }} />;
+  return isAuthenticated ?  React.cloneElement(Component, { userId }) : <Navigate to="/login" state={{ from: location }} />;
 
 };
 

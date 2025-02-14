@@ -6,44 +6,48 @@ const Side = () => {
   return (
     <div className="side-container">
       <div className="side-content">
-        <h1 className="side-title">Welcome to My EduAccess website</h1>
+        <h1 className="side-title">Empower Your Learning Journey</h1>
         <p className="side-description">
-          Discover a world of opportunities, connection, and growth.
+          Explore new skills, gain knowledge, and achieve your goals
+          effortlessly.
         </p>
         <div className="side-features">
           <div className="feature-item">
             <FaRocket className="feature-icon yellow" />
             <div>
-              <h3 className="feature-title">Accelerate Your Journey</h3>
+              <h3 className="feature-title">Boost Your Potential</h3>
               <p className="feature-description">
-                Unlock your potential with cutting-edge tools and resources.
+                Access high-quality courses and learning materials to stay
+                ahead.
               </p>
             </div>
           </div>
-          <div className="feature-item">
-            <FaLock className="feature-icon green" />
-            <div>
-              <h3 className="feature-title">Secure & Private</h3>
-              <p className="feature-description">
-                Your data is protected with state-of-the-art security measures.
-              </p>
-            </div>
-          </div>
+
           <div className="feature-item">
             <FaUsers className="feature-icon red" />
             <div>
-              <h3 className="feature-title">Community Driven</h3>
+              <h3 className="feature-title">Engage with Community</h3>
               <p className="feature-description">
-                Connect, collaborate, and grow with like-minded individuals.
+                Interact with experts, mentors, and fellow learners worldwide.
               </p>
             </div>
           </div>
           <div className="feature-item">
             <FaChartLine className="feature-icon pink" />
             <div>
-              <h3 className="feature-title">Track Your Progress</h3>
+              <h3 className="feature-title">Monitor Your Success</h3>
               <p className="feature-description">
-                Visualize your growth and achievements in real-time.
+                Track your learning progress with insights and performance
+                analytics.
+              </p>
+            </div>
+          </div>
+          <div className="feature-item">
+            <FaLock className="feature-icon green" />
+            <div>
+              <h3 className="feature-title">Enhanced Security</h3>
+              <p className="feature-description">
+                Enjoy a safe and secure platform designed to protect your data.
               </p>
             </div>
           </div>

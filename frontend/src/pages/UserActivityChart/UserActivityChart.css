@@ -25,6 +25,30 @@
   box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
 }
 
+.meChart {
+  display: flex;
+  justify-content: center;
+}
+
+.click-message {
+  width: 380px;
+  margin-bottom: 40px;
+  background: rgba(0, 0, 0, 0.75);
+  color: white;
+  padding: 16px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.click-message svg {
+  width: 20px;
+  height: 20px;
+}
+
 .chart-header {
   display: flex;
   justify-content: space-between;
@@ -200,12 +224,21 @@
   }
 
   .pie-chart-container {
-    height: 300px;
+    height: auto; /* Change to auto height */
+    min-height: 600px; /* Set minimum height */
+    display: flex;
+    flex-direction: column;
+    padding: 10px 0; /* Reduce horizontal padding */
   }
 
-  .nav-button {
-    padding: 10px 16px;
-    font-size: 0.9rem;
+  .pie-chart-container canvas {
+    max-height: 300px;
+    margin-bottom: 20px; /* Add space between chart and legend */
+  }
+
+  .click-message {
+    width: 100%;
+    max-width: 300px;
   }
 }
 
@@ -233,12 +266,17 @@
   }
 
   .pie-chart-container {
-    height: 250px;
+    min-height: 550px; /* Adjust minimum height for smaller screens */
+    padding: 5px 0;
+  }
+
+  .pie-chart-container canvas {
+    max-height: 250px;
   }
 
   .navigation-buttons {
     flex-direction: column;
-    gap: 10px;
+    gap: 50px;
   }
 
   .nav-button {

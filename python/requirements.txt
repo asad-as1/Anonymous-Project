@@ -1,7 +1,4 @@
 Flask
 flask-cors
-transformers
-torch
-spacy
-sentence-transformers
+google-generativeai
 gunicorn

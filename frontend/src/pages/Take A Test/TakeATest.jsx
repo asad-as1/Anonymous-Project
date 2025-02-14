@@ -11,7 +11,7 @@ const TakeATest = () => {
 
   const checkSimilarity = async () => {
     try {
-      const response = await axios.post(`${import.meta.env.VITE_PYTHON_URL}/similarity`, {
+      const response = await axios.post(`${import.meta.env.VITE_PYTHON_URL}/compare`, {
         original: originalText,
         user: userText,
       });

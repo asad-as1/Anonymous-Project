@@ -1,17 +1,23 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
-import Cookies from "cookies-js"
+import Cookies from "cookies-js";
 
 const TrackPageVisit = ({ userId }) => {
-    // console.log(userId, "hiii")
   const location = useLocation();
-  const token = Cookies.get('user');
+  const token = Cookies.get("user");
+  // console.log(token)
 
   useEffect(() => {
-    axios.post(`${import.meta.env.VITE_URL}/activity/page-visit`, { userId, page: location.pathname, token: token })
-      .catch(err => console.error("Error tracking page visit:", err));
-  }, [location, userId]);
+    if (!userId || !token) return;
+
+    // Extract page name dynamically from the URL
+    const page = location.pathname.replace("/", "") || "home";
+
+    axios
+      .post(`${import.meta.env.VITE_URL}/activity/page-visit`, { userId, page, token})
+      .catch((err) => console.error("Error tracking page visit:", err));
+  }, []);
 
   return null;
 };

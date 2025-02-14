@@ -3,6 +3,7 @@ import axios from "axios";
 import { Bar, Pie } from "react-chartjs-2";
 import "chart.js/auto";
 import Cookies from "cookies-js";
+import { MousePointerClick } from "lucide-react";
 import "./UserActivityChart.css";
 
 const pageMapping = {
@@ -14,7 +15,7 @@ const pageMapping = {
   "/mynotes": "MyNotes",
   "/summarization": "Summarization",
   "/queandans": "Ques & Ans",
-  "/myactivity": "My Activity",
+  "/myactivity": "My Activities",
 };
 
 const formatDate = (dateString) => {
@@ -23,13 +24,21 @@ const formatDate = (dateString) => {
 };
 
 const UserActivityChart = ({ userId }) => {
+  const [windowWidth, setWindowWidth] = useState(window?.innerWidth);
   const [chartData, setChartData] = useState({ labels: [], datasets: [] });
   const [activityData, setActivityData] = useState([]);
   const [selectedActivity, setSelectedActivity] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [offset, setOffset] = useState(0);
+  const [showHint, setShowHint] = useState(true);
   const token = Cookies.get("user");
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     const fetchActivity = async () => {
@@ -37,18 +46,18 @@ const UserActivityChart = ({ userId }) => {
         setLoading(true);
         setError(null);
         const response = await axios.post(
-          `${import.meta.env.VITE_URL}/activity/${userId}?timestamp=${Date.now()}`,
+          `${import.meta.env.VITE_URL}/activity/get`,
           { token }
         );
-
+        
         const data = response.data;
-        if (!data.length) {
+        if (!data?.length) {
           setError("No activity data found for this period.");
           return;
         }
 
         const sortedData = [...data].sort(
-          (a, b) => new Date(a.date) - new Date(b.date)
+          (a, b) => new Date(a.lastUpdated) - new Date(b.lastUpdated)
         );
 
         setOffset(Math.max(0, sortedData.length - 7));
@@ -68,7 +77,7 @@ const UserActivityChart = ({ userId }) => {
     if (activityData.length === 0) return;
 
     const slicedData = activityData.slice(offset, offset + 7);
-    const labels = slicedData.map((entry) => formatDate(entry.date));
+    const labels = slicedData.map((entry) => formatDate(entry.lastUpdated));
     const minutes = slicedData.map((entry) =>
       Math.max(Number((entry.totalActiveTime / 60).toFixed(2)), 1)
     );
@@ -92,10 +101,11 @@ const UserActivityChart = ({ userId }) => {
 
   const handleBarClick = (event, elements) => {
     if (elements.length > 0) {
+      setShowHint(false);
       const index = elements[0].index;
       const selectedDate = chartData.labels[index];
       const selectedData = activityData.find(
-        (entry) => formatDate(entry.date) === selectedDate
+        (entry) => formatDate(entry.lastUpdated) === selectedDate
       );
       setSelectedActivity(selectedData);
     }
@@ -104,17 +114,17 @@ const UserActivityChart = ({ userId }) => {
   const pieChartData = useMemo(() => {
     if (!selectedActivity || !selectedActivity.pagesVisited) return null;
 
-    const pageCount = {};
-    selectedActivity.pagesVisited.forEach((page) => {
-      const mappedPage = pageMapping[page] || "Unknown";
-      pageCount[mappedPage] = (pageCount[mappedPage] || 0) + 1;
-    });
+    const pageCount = Object.entries(selectedActivity.pagesVisited).reduce((acc, [page, count]) => {
+      const mappedPage = pageMapping[`/${page}`] || page;
+      acc[mappedPage] = count;
+      return acc;
+    }, {});
 
     return {
-      labels: Object.keys(pageCount).map((label) => `${label} (Page Visit)`),
+      labels: Object.keys(pageCount).map((label) => `${label} Page: ${pageCount[label]} visits`),
       datasets: [
         {
-          label: "Page Visit",
+          label: "Page Visits",
           data: Object.values(pageCount),
           backgroundColor: [
             "#ff6384",
@@ -159,6 +169,16 @@ const UserActivityChart = ({ userId }) => {
           </div>
 
           <div className="bar-chart-wrapper">
+            {showHint && (
+              <div className="meChart">
+
+              <div className="click-message">
+              <MousePointerClick style={{ width: "20px", height: "20px", flexShrink: "0" }} />
+              <span>Click on any bar line to see detailed page visits</span>
+              </div>
+            </div>
+            
+            )}
             <div className="bar-chart-container">
               <Bar
                 data={chartData}
@@ -195,6 +215,10 @@ const UserActivityChart = ({ userId }) => {
                       padding: 12,
                       titleFont: { size: 14 },
                       bodyFont: { size: 13 },
+                      callbacks: {
+                        label: (context) => 
+                          `${context.parsed.y} minutes active`,
+                      },
                     },
                   },
                 }}
@@ -232,7 +256,7 @@ const UserActivityChart = ({ userId }) => {
           <div className="chart-card activity-detail">
             <div className="chart-header">
               <h2 className="chart-title">
-                Page Visits on {formatDate(selectedActivity.date)}
+                Page Visits on {formatDate(selectedActivity.lastUpdated)}
               </h2>
               <button
                 className="close-button"
@@ -249,18 +273,21 @@ const UserActivityChart = ({ userId }) => {
                   maintainAspectRatio: false,
                   plugins: {
                     legend: {
-                      position: "right",
+                      position: windowWidth <= 768 ? 'bottom' : 'right',
                       labels: {
-                        padding: 15,
-                        font: { size: 13 },
+                        padding: windowWidth <= 768 ? 8 : 15, // Reduce padding on mobile
+                        font: { 
+                          size: windowWidth <= 480 ? 11 : 13 // Smaller font on mobile
+                        },
+                        boxWidth: windowWidth <= 480 ? 15 : 20, // Smaller boxes on mobile
                       },
                     },
+                    display: true,
+                    align: 'start', // Align text to the start
+                    maxWidth: windowWidth <= 768 ? 300 : 240,
                     tooltip: {
                       callbacks: {
-                        label: (context) =>
-                          `${context.label}: ${context.raw} Time${
-                            context.raw > 1 ? "s" : ""
-                          }`,
+                        label: (context) => `${context.label}`,
                       },
                     },
                   },

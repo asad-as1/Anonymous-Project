@@ -45,7 +45,10 @@ const Footer = () => {
       </div>
 
       <div className="footer-bottom">
-        <p>&copy; {currentYear} EduAccess. All rights reserved.</p>
+        <p> 
+          <b>Made by: Mohd Asad Ansari</b>
+          <div>&copy; {currentYear} EduAccess. All rights reserved.</div>
+        </p>
       </div>
     </footer>
   );

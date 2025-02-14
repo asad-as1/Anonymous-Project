@@ -11,6 +11,6 @@ const router = express.Router();
 
 router.post("/newActivity", authenticate, saveUserActivity);
 router.post("/page-visit", authenticate, savePageVisit);
-router.post("/:userId", authenticate, getUserActivity);
+router.post("/get", authenticate, getUserActivity);
 
 module.exports = router;

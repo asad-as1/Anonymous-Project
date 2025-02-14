@@ -1,18 +1,156 @@
+# api key = "AIzaSyDUYC19umF7AZYUEHdMTCeTS0qQ5Lcd_eY"
+# model_name = "gemini-1.5-flash"
+
+
+from flask import Flask, request, jsonify
+import google.generativeai as genai
 import os
-from flask import Flask
+from datetime import datetime
 from flask_cors import CORS
-from TakeATest import take_a_test_bp
-from Summarization import summarization_bp
+
 
 app = Flask(__name__)
-
-# Allow requests from your frontend domain
 CORS(app, resources={r"/*": {"origins": "https://eduaccess-as2.netlify.app"}})
 
-# Register Blueprints
-app.register_blueprint(take_a_test_bp)
-app.register_blueprint(summarization_bp)
+# Configure Google Gemini API
+GOOGLE_API_KEY = "AIzaSyDUYC19umF7AZYUEHdMTCeTS0qQ5Lcd_eY"
+genai.configure(api_key=GOOGLE_API_KEY)
+model = genai.GenerativeModel('gemini-1.5-flash')
 
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))  # Use PORT from Render or default to 5000
-    app.run(host="0.0.0.0", port=port)
+def log_request(endpoint, input_data):
+    """Utility function to log API requests"""
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    print(f"[{timestamp}] Request to {endpoint}")
+    print(f"Input data: {input_data}")
+
+def log_response(endpoint, response):
+    """Utility function to log API responses"""
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    print(f"[{timestamp}] Response from {endpoint}")
+    print(f"Response: {response}")
+
+@app.route('/summarize', methods=['POST'])
+def summarize_text():
+    try:
+        data = request.get_json()
+        if not data or 'text' not in data or 'prompt' not in data:
+            return jsonify({
+                'error': 'Missing required fields. Please provide both text and prompt.'
+            }), 400
+
+        text = data['text']
+        custom_prompt = data['prompt']
+
+        log_request('/summarize', {'text_length': len(text), 'prompt': custom_prompt})
+
+        # Construct the complete prompt
+        full_prompt = f"""
+        {custom_prompt}
+        
+        Text to summarize:
+        {text}
+        """
+
+        # Generate summary using Gemini
+        response = model.generate_content(full_prompt)
+        summary = response.text
+
+        result = {
+            'summary': summary,
+            'original_length': len(text),
+            'summary_length': len(summary)
+        }
+
+        log_response('/summarize', result)
+        return jsonify(result)
+
+    except Exception as e:
+        error_message = f"Error in summarization: {str(e)}"
+        print(error_message)
+        return jsonify({'error': error_message}), 500
+
+@app.route('/compare', methods=['POST'])
+def compare_texts():
+    try:
+        data = request.get_json()
+        if not data or 'reference_text' not in data or 'comparison_text' not in data:
+            return jsonify({
+                'error': 'Missing required fields. Please provide both reference_text and comparison_text.'
+            }), 400
+
+        reference_text = data['reference_text']
+        comparison_text = data['comparison_text']
+
+        log_request('/compare', {
+            'reference_length': len(reference_text),
+            'comparison_length': len(comparison_text)
+        })
+
+        comparison_prompt = f"""
+        Task: Compare the following two texts and provide:
+        1. A similarity score between 0 and 100
+        2. A detailed analysis of the comparison
+        3. Specific reasons for the score
+
+        Reference Text:
+        {reference_text}
+
+        Text to Compare:
+        {comparison_text}
+
+        Please format your response as follows:
+        Score: [number]
+        Analysis: [detailed analysis]
+        Reasons: [bullet points of specific reasons]
+        """
+
+        # Generate comparison using Gemini
+        response = model.generate_content(comparison_prompt)
+        comparison_result = response.text
+
+        # Parse the response to extract score and analysis
+        # Assuming the model follows the requested format
+        lines = comparison_result.split('\n')
+        score = None
+        analysis = ""
+        reasons = []
+
+        current_section = None
+        for line in lines:
+            if line.startswith('Score:'):
+                score = float(line.replace('Score:', '').strip())
+            elif line.startswith('Analysis:'):
+                current_section = 'analysis'
+            elif line.startswith('Reasons:'):
+                current_section = 'reasons'
+            elif line.strip() and current_section:
+                if current_section == 'analysis':
+                    analysis += line + "\n"
+                elif current_section == 'reasons':
+                    reasons.append(line.strip())
+
+        result = {
+            'similarity_score': score,
+            'analysis': analysis.strip(),
+            'reasons': reasons,
+            'reference_length': len(reference_text),
+            'comparison_length': len(comparison_text)
+        }
+
+        log_response('/compare', result)
+        return jsonify(result)
+
+    except Exception as e:
+        error_message = f"Error in comparison: {str(e)}"
+        print(error_message)
+        return jsonify({'error': error_message}), 500
+
+if __name__ == '__main__':
+    if not GOOGLE_API_KEY:
+        raise ValueError("Please set the GOOGLE_API_KEY environment variable")
+    
+    print("Starting Flask API server...")
+    print("Available endpoints:")
+    print("1. POST /summarize - Text summarization")
+    print("2. POST /compare - Text comparison")
+    app.run(debug=True)

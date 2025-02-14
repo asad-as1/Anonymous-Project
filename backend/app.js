@@ -23,6 +23,7 @@ app.use(cors({
   origin: process.env.CORS_ORIGIN,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type'],
+  credentials: true,
 }));
 app.use(express.json());
 app.use(bodyParser.json());

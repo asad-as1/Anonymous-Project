@@ -4,6 +4,7 @@ import './Summarization.css';
 
 function Summarization() {
   const [inputText, setInputText] = useState("");
+  const [customPrompt, setCustomPrompt] = useState("Summarize this text concisely.");
   const [summary, setSummary] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
@@ -19,7 +20,10 @@ function Summarization() {
     setSummary("");
 
     try {
-      const response = await axios.post(`${import.meta.env.VITE_PYTHON_URL}/summarize`, { text: inputText });
+      const response = await axios.post(`${import.meta.env.VITE_PYTHON_URL}/summarize`, {
+        text: inputText,
+        prompt: customPrompt,
+      });
       
       if (response.data.summary) {
         setSummary(response.data.summary);
@@ -44,6 +48,13 @@ function Summarization() {
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
             placeholder="Write or paste your text here..."
+          />
+          <input
+            type="text"
+            className="prompt-input"
+            value={customPrompt}
+            onChange={(e) => setCustomPrompt(e.target.value)}
+            placeholder="Enter custom prompt (optional)"
           />
           {error && <p className="error-message">{error}</p>}
           <button 

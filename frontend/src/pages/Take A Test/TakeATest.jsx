@@ -6,27 +6,33 @@ import "./TakeATest.css";
 const TakeATest = () => {
   const [originalText, setOriginalText] = useState("");
   const [userText, setUserText] = useState("");
-  const [similarity, setSimilarity] = useState(null);
+  const [similarityScore, setSimilarityScore] = useState(null);
+  const [analysis, setAnalysis] = useState("");
+  const [reasons, setReasons] = useState([]);
   const [isHidden, setIsHidden] = useState(false);
+  const [error, setError] = useState(null);
 
   const checkSimilarity = async () => {
     try {
+      setError(null);
       const response = await axios.post(`${import.meta.env.VITE_PYTHON_URL}/compare`, {
-        original: originalText,
-        user: userText,
+        reference_text: originalText,
+        comparison_text: userText,
       });
-      setSimilarity(response.data.similarity);
+
+      const { similarity_score, analysis, reasons } = response.data;
+      setSimilarityScore(similarity_score);
+      setAnalysis(analysis);
+      setReasons(reasons);
     } catch (error) {
       console.error("Error fetching similarity:", error);
+      setError("Failed to fetch similarity score. Please try again.");
     }
   };
 
   return (
     <div className="similarity-container">
       <h1 className="title">Text Similarity Checker</h1>
-      {/* <div className="side-nts">
-      <h2 className="side-nt">"On the left side, paste the text you learned from sources like books or notes. On the right side, write the content from memory. Then, click the 'Text Similarity' button to check how accurate your recall is."</h2>
-      </div> */}
       <div className="panels-container">
         <div className="panel">
           <div className="panel-header">
@@ -41,9 +47,8 @@ const TakeATest = () => {
           <textarea
             value={originalText}
             onChange={(e) => setOriginalText(e.target.value)}
-            placeholder="Enter original text here...
-            
-On this side, paste the text from the sources (like books or notes) that you have learned."            className={`text-input ${isHidden ? "hidden-text" : ""}`}
+            placeholder="Enter original text here...\n\nOn this side, paste the text from the sources (like books or notes) that you have learned."
+            className={`text-input ${isHidden ? "hidden-text" : ""}`}
           />
         </div>
 
@@ -52,9 +57,7 @@ On this side, paste the text from the sources (like books or notes) that you hav
           <textarea
             value={userText}
             onChange={(e) => setUserText(e.target.value)}
-            placeholder="Enter your text here...
-            
-On this side, write the content from your memory. Then, click the 'Text Similarity' button to check how accurate your recall is."
+            placeholder="Enter your text here...\n\nOn this side, write the content from your memory. Then, click the 'Text Similarity' button to check how accurate your recall is."
             className="text-input"
           />
         </div>
@@ -64,15 +67,21 @@ On this side, write the content from your memory. Then, click the 'Text Similari
         <button onClick={checkSimilarity} className="check-button">
           Check Similarity
         </button>
-
-        {similarity !== null && (
-          <div className="score-container">
-            <p className="score">
-              Similarity Score: {Math.round(similarity * 100)} %
-            </p>
-          </div>
-        )}
       </div>
+
+      {error && <p className="error-message">{error}</p>}
+
+      {similarityScore !== null && (
+        <div className="score-container">
+          <p className="score">Similarity Score: {Math.round(similarityScore * 100)} %</p>
+          <p className="analysis"><strong>Analysis:</strong> {analysis}</p>
+          <ul className="reasons">
+            {reasons.map((reason, index) => (
+              <li key={index}>{reason}</li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 };

@@ -16,10 +16,6 @@ lerna-debug.log*
 **/dist/
 **/dist-ssr/
 
-# Ignore package.json and package-lock.json in all subfolders
-**/package.json
-**/package-lock.json
-
 # Ignore local environment files
 *.local
 

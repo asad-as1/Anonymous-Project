@@ -56,6 +56,20 @@ const AppWrapper = () => {
         { path: '/', element: <Home /> },
         { path: '/login', element: <Login /> },
         { path: '/signup', element: <SignUp /> },
+
+
+        // { path: '/mynotes', element: <MyNotes />},
+        // { path: '/schedule', element: <Event />  },
+        // { path: '/mynotes/:id', element: <SingleNote /> },
+        // { path: '/textreader', element: <TextReader /> },
+        // { path: '/queandans', element: <QnA /> },
+        // { path: '/questions/:id', element: <Questions /> },
+        // { path: '/studynotes', element: <StudyNotes /> },
+        // { path: '/takeatest', element: <TakeATest /> },
+        // { path: '/summarization', element:<Summarization /> },
+        // { path: '/myactivity', element: <ChartPage /> },
+
+
         { path: '/mynotes', element: <ProtectedRoute element={<MyNotes />} /> },
         { path: '/schedule', element: <ProtectedRoute element={<Event />} /> },
         { path: '/mynotes/:id', element: <ProtectedRoute element={<SingleNote />} /> },
@@ -66,6 +80,8 @@ const AppWrapper = () => {
         { path: '/takeatest', element: <ProtectedRoute element={<TakeATest />} /> },
         { path: '/summarization', element: <ProtectedRoute element={<Summarization />} /> },
         { path: '/myactivity', element: <ProtectedRoute element={<ChartPage />} userId={userId} /> },
+
+
         { path: "*", element: <NotFound /> },
       ],
     },

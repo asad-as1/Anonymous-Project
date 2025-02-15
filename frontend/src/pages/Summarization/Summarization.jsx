@@ -4,10 +4,20 @@ import './Summarization.css';
 
 function Summarization() {
   const [inputText, setInputText] = useState("");
-  const [customPrompt, setCustomPrompt] = useState("Summarize this text concisely.");
+  const [customPrompt, setCustomPrompt] = useState("Summarize this text in detail while retaining maximum information. Expand on key points for better clarity.");
   const [summary, setSummary] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [wordCount, setWordCount] = useState(0);
+
+  const calculateWordCount = (text) => {
+    return text.trim().split(/\s+/).filter(word => word.length > 0).length;
+  };
+
+  const handleTextChange = (e) => {
+    setInputText(e.target.value);
+    setWordCount(calculateWordCount(e.target.value));
+  };
 
   const handleSummarize = async () => {
     if (!inputText.trim()) {
@@ -38,43 +48,70 @@ function Summarization() {
     }
   };
 
+  const handleClearAll = () => {
+    setInputText("");
+    setSummary("");
+    setError("");
+    setWordCount(0);
+    setCustomPrompt("Summarize this text concisely while retaining maximum information.");
+  };
+
   return (
     <div className="text-summarizer-container">
       <div className="summarizer-wrapper">
         <div className="input-section">
-          <h2>Input Text</h2>
+          <div className="section-header">
+            <h2>Input Text</h2>
+            <span className="word-count">Words: {wordCount}</span>
+          </div>
           <textarea
             className="input-textarea"
             value={inputText}
-            onChange={(e) => setInputText(e.target.value)}
+            onChange={handleTextChange}
             placeholder="Write or paste your text here..."
           />
-          <input
-            type="text"
-            className="prompt-input"
-            value={customPrompt}
-            onChange={(e) => setCustomPrompt(e.target.value)}
-            placeholder="Enter custom prompt (optional)"
-          />
+          <div className="prompt-container">
+            <label htmlFor="customPrompt">Customization Prompt:</label>
+            <input
+              id="customPrompt"
+              type="text"
+              className="prompt-input"
+              value={customPrompt}
+              onChange={(e) => setCustomPrompt(e.target.value)}
+              placeholder="Enter custom prompt (optional)"
+            />
+          </div>
           {error && <p className="error-message">{error}</p>}
-          <button 
-            onClick={handleSummarize}
-            disabled={isLoading}
-            className="summarize-button"
-          >
-            {isLoading ? "Summarizing..." : "Summarize"}
-          </button>
+          <div className="button-group">
+            <button 
+              onClick={handleSummarize}
+              disabled={isLoading}
+              className="summarize-button"
+            >
+              {isLoading ? "Summarizing..." : "Summarize"}
+            </button>
+            <button 
+              onClick={handleClearAll}
+              className="clear-button"
+              disabled={isLoading}
+            >
+              Clear All
+            </button>
+          </div>
         </div>
 
         <div className="summary-section">
           <h2>Summary</h2>
-          <div className="summary-textarea">
+          <div className="summary-content">
             {isLoading ? (
-              <p className="loading-text">Generating summary...</p>
+              <div className="loading-container">
+                <div className="loading-spinner"></div>
+                <p className="loading-text">Generating summary...</p>
+              </div>
             ) : summary ? (
-              <p>{summary}</p>
+              <div className="summary-text">{summary}</div>
             ) : (
-              <p className="placeholder-text">Summary will appear here...</p>
+              <p className="placeholder-text">Your summary will appear here...</p>
             )}
           </div>
         </div>

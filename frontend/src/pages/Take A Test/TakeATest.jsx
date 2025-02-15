@@ -1,4 +1,3 @@
-// TakeATest.jsx
 import React, { useState } from "react";
 import axios from "axios";
 import "./TakeATest.css";
@@ -11,10 +10,13 @@ const TakeATest = () => {
   const [reasons, setReasons] = useState([]);
   const [isHidden, setIsHidden] = useState(false);
   const [error, setError] = useState(null);
+  const [isChecking, setIsChecking] = useState(false); // New state for button text
 
   const checkSimilarity = async () => {
     try {
       setError(null);
+      setIsChecking(true); // Show "Checking..." while waiting for response
+
       const response = await axios.post(`${import.meta.env.VITE_PYTHON_URL}/compare`, {
         reference_text: originalText,
         comparison_text: userText,
@@ -27,6 +29,8 @@ const TakeATest = () => {
     } catch (error) {
       console.error("Error fetching similarity:", error);
       setError("Failed to fetch similarity score. Please try again.");
+    } finally {
+      setIsChecking(false); // Reset button text
     }
   };
 
@@ -64,8 +68,8 @@ const TakeATest = () => {
       </div>
 
       <div className="button-container">
-        <button onClick={checkSimilarity} className="check-button">
-          Check Similarity
+        <button onClick={checkSimilarity} className="check-button" disabled={isChecking}>
+          {isChecking ? "Checking..." : "Check Similarity"}
         </button>
       </div>
 
@@ -73,7 +77,7 @@ const TakeATest = () => {
 
       {similarityScore !== null && (
         <div className="score-container">
-          <p className="score">Similarity Score: {Math.round(similarityScore * 100)} %</p>
+          <p className="score">Similarity Score: {Math.round(similarityScore)} %</p>
           <p className="analysis"><strong>Analysis:</strong> {analysis}</p>
           <ul className="reasons">
             {reasons.map((reason, index) => (

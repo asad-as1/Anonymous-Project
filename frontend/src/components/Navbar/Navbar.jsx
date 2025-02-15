@@ -83,13 +83,13 @@ const Navbar = () => {
       <div ref={menuRef} className={`nav-links ${menuOpen ? 'active' : ''}`}>
         <Link to="/">Home</Link>
         <Link to="/takeatest">Take A Test</Link>
+        <Link to="/summarization">Summarization</Link>
+        <Link to="/textreader">Text Reader</Link>
         <Link to="/schedule">Schedule</Link>
         <Link to="/studynotes">Study Notes</Link>
-        <Link to="/textreader">Text Reader</Link>
         <Link to="/mynotes">MyNotes</Link>
-        <Link to="/summarization">Summarization</Link>
-        <Link to="/queandans">Ques & Ans</Link>
         <Link to="/myactivity">My Activities</Link>
+        <Link to="/queandans">Ques & Ans</Link>
         {isAuthenticated ? (
           <>
             <button onClick={handleLogout} className="logout-btn">Logout</button>

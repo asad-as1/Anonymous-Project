@@ -289,3 +289,7 @@
     padding: 4px 8px;
   }
 }
+
+.chart-legend li {
+  cursor: pointer;
+}

@@ -281,6 +281,9 @@ const UserActivityChart = ({ userId }) => {
                         },
                         boxWidth: windowWidth <= 480 ? 15 : 20, // Smaller boxes on mobile
                       },
+                      onHover: (event) => {
+                        event.native.target.style.cursor = "pointer";
+                      },
                     },
                     display: true,
                     align: 'start', // Align text to the start

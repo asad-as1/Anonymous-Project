@@ -4,7 +4,7 @@ import './Summarization.css';
 
 function Summarization() {
   const [inputText, setInputText] = useState("");
-  const [customPrompt, setCustomPrompt] = useState("Summarize this text in detail while retaining maximum information. Expand on key points for better clarity.");
+  const [customPrompt, setCustomPrompt] = useState("Summarize this text concisely while retaining maximum information.");
   const [summary, setSummary] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");

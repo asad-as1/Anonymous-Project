@@ -51,7 +51,7 @@ const TakeATest = () => {
           <textarea
             value={originalText}
             onChange={(e) => setOriginalText(e.target.value)}
-            placeholder="Enter original text here...\n\nOn this side, paste the text from the sources (like books or notes) that you have learned."
+            placeholder="Enter original text here... On this side, paste the text from the sources (like books or notes) that you have learned."
             className={`text-input ${isHidden ? "hidden-text" : ""}`}
           />
         </div>
@@ -61,7 +61,7 @@ const TakeATest = () => {
           <textarea
             value={userText}
             onChange={(e) => setUserText(e.target.value)}
-            placeholder="Enter your text here...\n\nOn this side, write the content from your memory. Then, click the 'Text Similarity' button to check how accurate your recall is."
+            placeholder="Enter your text here... On this side, write the content from your memory. Then, click the 'Text Similarity' button to check how accurate your recall is."
             className="text-input"
           />
         </div>

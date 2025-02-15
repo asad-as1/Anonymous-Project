@@ -3,7 +3,6 @@ const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv')
 dotenv.config(); 
 
-
 // Register a new user
 exports.register = async (req, res) => {
   try {
@@ -14,10 +13,19 @@ exports.register = async (req, res) => {
       return res.status(400).json({ message: 'User already exists' });
     }
     
-    const newUser = new User({ username, fullName:name, email, password, profilepic: profilePicture ?? undefined, bio });
-    await newUser.save();
-    // console.log(newUser)
-    
+    let newUser = new User({
+      username,
+      fullName: name,
+      email,
+      password,
+      profilepic: profilePicture ?? undefined,
+      bio
+    });
+
+    newUser = await newUser.save(); 
+
+    // console.log("After saving:", newUser); 
+
     res.status(201).json({ message: 'User registered successfully', user: newUser });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error });

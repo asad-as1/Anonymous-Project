@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "./TakeATest.css";
+import Cookies from "cookies-js"
 
 const TakeATest = () => {
   const [originalText, setOriginalText] = useState("");
@@ -11,15 +12,17 @@ const TakeATest = () => {
   const [isHidden, setIsHidden] = useState(false);
   const [error, setError] = useState(null);
   const [isChecking, setIsChecking] = useState(false); // New state for button text
+  const token = Cookies.get('user')
 
   const checkSimilarity = async () => {
     try {
       setError(null);
       setIsChecking(true); // Show "Checking..." while waiting for response
 
-      const response = await axios.post(`${import.meta.env.VITE_PYTHON_URL}/compare`, {
+      const response = await axios.post(`${import.meta.env.VITE_URL}/api/compare`, {
         reference_text: originalText,
         comparison_text: userText,
+        token : token
       });
 
       const { similarity_score, analysis, reasons } = response.data;

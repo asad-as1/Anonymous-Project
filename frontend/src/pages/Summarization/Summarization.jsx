@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './Summarization.css';
+import Cookies from "cookies-js"
 
 function Summarization() {
   const [inputText, setInputText] = useState("");
@@ -9,6 +10,7 @@ function Summarization() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [wordCount, setWordCount] = useState(0);
+  const token = Cookies.get('user')
 
   const calculateWordCount = (text) => {
     return text.trim().split(/\s+/).filter(word => word.length > 0).length;
@@ -30,9 +32,10 @@ function Summarization() {
     setSummary("");
 
     try {
-      const response = await axios.post(`${import.meta.env.VITE_PYTHON_URL}/summarize`, {
+      const response = await axios.post(`${import.meta.env.VITE_URL}/api/summarize`, {
         text: inputText,
         prompt: customPrompt,
+        token: token
       });
       
       if (response.data.summary) {

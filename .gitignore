@@ -8,6 +8,7 @@ pnpm-debug.log*
 lerna-debug.log*
 
 **/.env
+.pyhton
 
 # Ignore node_modules in all subfolders
 **/node_modules/

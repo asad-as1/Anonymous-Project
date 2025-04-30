@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "./TakeATest.css";
-import Cookies from "cookies-js";
+import Cookies from "cookies-js"
 
 const TakeATest = () => {
   const [originalText, setOriginalText] = useState("");
@@ -11,36 +11,29 @@ const TakeATest = () => {
   const [reasons, setReasons] = useState([]);
   const [isHidden, setIsHidden] = useState(false);
   const [error, setError] = useState(null);
-  const [isChecking, setIsChecking] = useState(false);
-  const token = Cookies.get("user");
+  const [isChecking, setIsChecking] = useState(false); // New state for button text
+  const token = Cookies.get('user')
 
   const checkSimilarity = async () => {
     try {
       setError(null);
-      setIsChecking(true);
+      setIsChecking(true); // Show "Checking..." while waiting for response
 
       const response = await axios.post(`${import.meta.env.VITE_URL}/api/compare`, {
         reference_text: originalText,
         comparison_text: userText,
-        token: token
+        token : token
       });
 
       const { similarity_score, analysis, reasons } = response.data;
       setSimilarityScore(similarity_score);
       setAnalysis(analysis);
-
-      // Parse markdown bullets into an array
-      const parsedReasons = reasons
-        .split("\n")
-        .filter(line => line.trim().startsWith("*"))
-        .map(line => line.replace(/^\*\s*/, ''));
-
-      setReasons(parsedReasons);
+      setReasons(reasons);
     } catch (error) {
       console.error("Error fetching similarity:", error);
       setError("Failed to fetch similarity score. Please try again.");
     } finally {
-      setIsChecking(false);
+      setIsChecking(false); // Reset button text
     }
   };
 
@@ -89,14 +82,11 @@ const TakeATest = () => {
         <div className="score-container">
           <p className="score">Similarity Score: {Math.round(similarityScore)} %</p>
           <p className="analysis"><strong>Analysis:</strong> {analysis}</p>
-          <div className="reasons">
-            <strong>Reasons:</strong>
-            <ul>
-              {reasons.map((reason, index) => (
-                <li key={index} dangerouslySetInnerHTML={{ __html: reason }} />
-              ))}
-            </ul>
-          </div>
+          <ul className="reasons">
+            {reasons.map((reason, index) => (
+              <li key={index}>{reason}</li>
+            ))}
+          </ul>
         </div>
       )}
     </div>

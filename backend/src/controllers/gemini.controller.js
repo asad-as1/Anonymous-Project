@@ -12,7 +12,12 @@ exports.summarizeText = async (req, res) => {
     const { text, prompt } = req.body;
 
     if (!text || !prompt) {
-      return res.status(400).json({ error: "Missing required fields. Please provide both text and prompt." });
+      return res
+        .status(400)
+        .json({
+          error:
+            "Missing required fields. Please provide both text and prompt.",
+        });
     }
 
     const fullPrompt = `
@@ -23,9 +28,11 @@ exports.summarizeText = async (req, res) => {
     `;
 
     const response = await model.generateContent(fullPrompt);
-    
+
     // Extract summary text correctly
-    const summary = response.response?.candidates?.[0]?.content?.parts?.[0]?.text || "Summary not available.";
+    const summary =
+      response.response?.candidates?.[0]?.content?.parts?.[0]?.text ||
+      "Summary not available.";
 
     return res.json({
       summary,
@@ -33,10 +40,11 @@ exports.summarizeText = async (req, res) => {
       summary_length: summary.length,
     });
   } catch (error) {
-    return res.status(500).json({ error: `Error in summarization: ${error.message}` });
+    return res
+      .status(500)
+      .json({ error: `Error in summarization: ${error.message}` });
   }
 };
-
 
 // Text Comparison Controller
 exports.compareTexts = async (req, res) => {
@@ -45,29 +53,36 @@ exports.compareTexts = async (req, res) => {
     const { reference_text, comparison_text } = req.body;
 
     if (!reference_text || !comparison_text) {
-      return res.status(400).json({ error: "Missing required fields. Please provide both reference_text and comparison_text." });
+      return res
+        .status(400)
+        .json({
+          error:
+            "Missing required fields. Please provide both reference_text and comparison_text.",
+        });
     }
 
     const comparisonPrompt = `
-      Task: Compare the following two texts and provide:
-      1. A similarity score between 0 and 100
-      2. A detailed analysis of the comparison
-      3. Specific reasons for the score
+  Task: Compare the following two texts and provide:
+  1. A similarity score between 0 and 100
+  2. A detailed analysis of the comparison
+  3. Specific reasons for the score
 
-      Reference Text:
-      ${reference_text}
+  Reference Text:
+  ${reference_text}
 
-      Text to Compare:
-      ${comparison_text}
+  Text to Compare:
+  ${comparison_text}
 
-      Please format your response as follows:
-      Score: [number]
-      Analysis: [detailed analysis]
-      Reasons: [bullet points of specific reasons]
-    `;
+  Please format your response as follows:
+  Score: [number]
+  Analysis: [detailed paragraph-style analysis]
+  Reasons: [detailed explanation in paragraph form, not in bullet points]
+`;
 
     const response = await model.generateContent(comparisonPrompt);
-    const summary = response.response?.candidates?.[0]?.content?.parts?.[0]?.text || "Summary not available.";
+    const summary =
+      response.response?.candidates?.[0]?.content?.parts?.[0]?.text ||
+      "Summary not available.";
     // console.log(summary)
     const comparisonResult = summary;
 
@@ -101,6 +116,8 @@ exports.compareTexts = async (req, res) => {
       comparison_length: comparison_text.length,
     });
   } catch (error) {
-    return res.status(500).json({ error: `Error in comparison: ${error.message}` });
+    return res
+      .status(500)
+      .json({ error: `Error in comparison: ${error.message}` });
   }
 };

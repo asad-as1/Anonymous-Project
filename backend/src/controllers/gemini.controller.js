@@ -76,7 +76,7 @@ exports.compareTexts = async (req, res) => {
   Please format your response as follows:
   Score: [number]
   Analysis: [detailed paragraph-style analysis]
-  Reasons: [detailed explanation in paragraph form, not in bullet points]
+  Reasons: [points of specific reasons]
 `;
 
     const response = await model.generateContent(comparisonPrompt);
